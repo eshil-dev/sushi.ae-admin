@@ -1,4 +1,4 @@
-# Getting Started with Fresh Menu
+# Getting Started with Shushi-React-Administrator-page
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
