@@ -1,13 +1,13 @@
 import { Col, Row } from "reactstrap";
-import SalesChart from "../components/SalesChart";
-import Feeds from "../components/Feeds";
-import ProjectTables from "../components/ProjectTable";
+import SalesChart from "../../components/SalesChart";
+import Feeds from "../../components/Feeds";
+import ProjectTables from "../../components/ProjectTable";
 
-import Blog from "../components/Blog";
-import bg1 from "../assets/images/bg/bg1.jpg";
-import bg2 from "../assets/images/bg/bg2.jpg";
-import bg3 from "../assets/images/bg/bg3.jpg";
-import bg4 from "../assets/images/bg/bg4.jpg";
+import Blog from "../../components/Blog";
+import bg1 from "../../assets/images/bg/bg1.jpg";
+import bg2 from "../../assets/images/bg/bg2.jpg";
+import bg3 from "../../assets/images/bg/bg3.jpg";
+import bg4 from "../../assets/images/bg/bg4.jpg";
 
 const BlogData = [
   {
@@ -47,9 +47,6 @@ const BlogData = [
 const Starter = () => {
   return (
     <div>
-      {/***Top Cards***/}
-
-      {/***Sales & Feed***/}
       <Row>
         <Col sm="6" lg="6" xl="7" xxl="8">
           <SalesChart />

@@ -9,97 +9,37 @@ const navigation = [
     icon: "bi bi-speedometer2",
   },
   {
-    title: "Alert",
-    href: "/alerts",
-    icon: "bi bi-bell",
+    title: "Orders",
+    href: "/orders",
+    icon: "bi bi-columns",
   },
   {
-    title: "Badges",
-    href: "/badges",
+    title: "Add Category",
+    href: "/add-category",
     icon: "bi bi-patch-check",
   },
   {
-    title: "Buttons",
-    href: "/buttons",
+    title: "Categories",
+    href: "/categories",
+    icon: "bi bi-bell",
+  },
+
+  {
+    title: "Add Menu",
+    href: "/add-menu",
     icon: "bi bi-hdd-stack",
   },
   {
-    title: "Cards",
-    href: "/cards",
+    title: "Menus",
+    href: "/menus",
     icon: "bi bi-card-text",
   },
   
   {
-    title: "Grid",
-    href: "/grid",
+    title: "Users",
+    href: "/users",
     icon: "bi bi-columns",
   },
-  {
-    title: "Table",
-    href: "/table",
-    icon: "bi bi-layout-split",
-  },
-  {
-    title: "Forms",
-    href: "/forms",
-    icon: "bi bi-textarea-resize",
-  },
-  {
-    title: "Breadcrumbs",
-    href: "/breadcrumbs",
-    icon: "bi bi-link",
-  },
-  {
-    title: "About",
-    href: "/about",
-    icon: "bi bi-people",
-  },
-  // {
-  //   title: "Alert",
-  //   href: "/alerts",
-  //   icon: "bi bi-bell",
-  // },
-  // {
-  //   title: "Badges",
-  //   href: "/badges",
-  //   icon: "bi bi-patch-check",
-  // },
-  // {
-  //   title: "Buttons",
-  //   href: "/buttons",
-  //   icon: "bi bi-hdd-stack",
-  // },
-  // {
-  //   title: "Cards",
-  //   href: "/cards",
-  //   icon: "bi bi-card-text",
-  // },
-  
-  // {
-  //   title: "Grid",
-  //   href: "/grid",
-  //   icon: "bi bi-columns",
-  // },
-  // {
-  //   title: "Table",
-  //   href: "/table",
-  //   icon: "bi bi-layout-split",
-  // },
-  // {
-  //   title: "Forms",
-  //   href: "/forms",
-  //   icon: "bi bi-textarea-resize",
-  // },
-  // {
-  //   title: "Breadcrumbs",
-  //   href: "/breadcrumbs",
-  //   icon: "bi bi-link",
-  // },
-  // {
-  //   title: "About",
-  //   href: "/about",
-  //   icon: "bi bi-people",
-  // },
 ];
 
 const Sidebar = () => {
@@ -136,15 +76,6 @@ const Sidebar = () => {
               </Link>
             </NavItem>
           ))}
-          <Button
-            color="danger"
-            tag="a"
-            target="_blank"
-            className="mt-3"
-            href="https://wrappixel.com/templates/monster-react-admin/?ref=33"
-          >
-            Upgrade To Pro
-          </Button>
         </Nav>
       </div>
     </div>
