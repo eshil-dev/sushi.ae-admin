@@ -13,13 +13,9 @@ import {
     Label,
     Input,
 } from "reactstrap";
-import { useSelector, useDispatch } from "react-redux";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
-import { categoryRemoved, categoryUpdated } from "./categoriesSlice";
-import { fetchCategories } from './categoriesSlice';
-
-import user1 from "../../assets/images/users/user1.jpg";
+import { useGetCategoriesQuery, useRemoveCategoryMutation, useUpdateCategoryMutation } from "../api/apiSlice";
 
 const CategoriesList = () => {
 
@@ -31,16 +27,9 @@ const CategoriesList = () => {
     const [description, setDescription] = useState('');
     const [available, setAvailable] = useState(false);
 
-    const dispatch = useDispatch();
-
-    const categories = useSelector(state => state.categories.categories);
-    const categoryStatus = useSelector(state => state.categories.status);
-
-    useEffect(() => {
-        if (categoryStatus === 'idle') {
-            dispatch(fetchCategories());
-        }
-    }, [dispatch, categoryStatus])
+    const { data: categories, isLoading, isSuccess, isError, error } = useGetCategoriesQuery();
+    const [updateCategory] = useUpdateCategoryMutation();
+    const [removeCategory] = useRemoveCategoryMutation();
 
     const toggleUpdate = () => setIsUpdateModalOpen(!isUpdateModalOpen);
     const toggleDelete = () => setIsDeleteModalOpen(!isDeleteModalOpen);
@@ -49,31 +38,41 @@ const CategoriesList = () => {
     const onDescriptionChanged = e => setDescription(e.target.value);
     const onAvailableChanged = e => setAvailable(e.target.checked);
 
-    const deleteCategory = () => {
-        dispatch(categoryRemoved(catId));
-        setIsDeleteModalOpen(!isDeleteModalOpen);
+    const deleteCategory = async () => {
+        try {
+            await removeCategory(catId).unwrap();
+            setIsDeleteModalOpen(!isDeleteModalOpen);
+        } catch (e) {
+            console.log('ERRR during delete category');
+        }
     }
 
     const onUpdateButtonClicked = catId => {
         toggleUpdate()
         setCatId(catId);
-        const catItem = categories.find((item) => item.id === catId);
-        setName(catItem.name);
-        setDescription(catItem.description);
-        setAvailable(catItem.available)
+        const categoryItem = categories.find((item) => item._id === catId);
+        setName(categoryItem.name);
+        setDescription(categoryItem.description);
+        setAvailable(categoryItem.available)
     }
 
-    const onUpdateFormSubmitted = e => {
+    const onUpdateFormSubmitted = async (e) => {
         e.preventDefault();
-        const newCategory = {
-            catId: catId,
-            avatar: user1,
-            name: name,
-            description: description,
-            available: available,
-        };
-        dispatch(categoryUpdated(newCategory));
-        toggleUpdate();
+        try {
+            const updatedCategory = {
+                _id: catId,
+                imageUrl: 'user.jpg',
+                name: name,
+                description: description,
+                available: available,
+            };
+            await updateCategory(updatedCategory).unwrap();
+
+        } catch (err) {
+
+        } finally {
+            toggleUpdate();
+        }
 
     }
 
@@ -85,7 +84,7 @@ const CategoriesList = () => {
                 <h5>Are you sure you want to delete this category?</h5>
             </ModalBody>
             <ModalFooter>
-                <Button color="danger" onClick={deleteCategory}>Delete</Button>
+                <Button color="danger" onClick={deleteCategory} >Delete</Button>
                 <Button onClick={toggleDelete}>
                     Cancel
                 </Button>
@@ -141,6 +140,13 @@ const CategoriesList = () => {
         </Modal>
     );
 
+    if (isLoading && !isSuccess) {
+        return <h2>Loading...</h2>
+    } else if (isError) {
+        return <h2>Some error occured.</h2>
+    } else if (error) {
+        return <h2>{error.toString()}</h2>
+    }
     return (
         <div>
             {updateModal}
@@ -165,7 +171,7 @@ const CategoriesList = () => {
                                     <td>
                                         <div className="d-flex align-items-center p-2">
                                             <img
-                                                src={catData.avatar}
+                                                src={`../../assets/images/users/${catData.imageUrl}`}
                                                 className="rounded-circle"
                                                 alt="avatar"
                                                 width="45"
@@ -180,7 +186,9 @@ const CategoriesList = () => {
                                             <span className="text-muted">{catData.description}</span>
                                         </div>
                                     </td>
-                                    <td>
+                                    <td>{
+
+                                    }
                                         {catData.available === true ? (
                                             <span className="p-2 bg-success rounded-circle  ms-3 bi bi-check-circle" style={{ color: 'white' }}></span>
                                         ) : (
@@ -188,13 +196,13 @@ const CategoriesList = () => {
                                         )}
                                     </td>
                                     <td>
-                                        <Button className="btn btn-sm" outline color="primary" onClick={() => onUpdateButtonClicked(catData.id)}>
+                                        <Button className="btn btn-sm" outline color="primary" onClick={() => onUpdateButtonClicked(catData._id)}>
                                             Update
                                         </Button>
                                         &nbsp;
                                         <Button className="btn btn-sm" outline color="danger" onClick={() => {
                                             toggleDelete();
-                                            setCatId(catData.id);
+                                            setCatId(catData._id);
                                         }}>
                                             Delete
                                         </Button>

@@ -11,38 +11,37 @@ import {
     Input,
 } from "reactstrap";
 
-import { useDispatch } from "react-redux";
 import { useState } from "react";
-import { categoryAdded } from "./categoriesSlice";
 
-import user1 from "../../assets/images/users/user1.jpg";
+import { useAddNewCategoryMutation } from "../api/apiSlice";
 
 const AddCategoryForm = () => {
 
-    const dispatch = useDispatch();
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const [available, setAvailable] = useState(false);
+
+    const [addNewCategory, { isLoading }] = useAddNewCategoryMutation();
 
     const onNameChanged = e => setName(e.target.value);
     const onDescriptionChanged = e => setDescription(e.target.value);
     const onAvailableChanged = e => setAvailable(e.target.checked);
 
-    const isValid = Boolean(name) && Boolean(description);
+    const isValid = Boolean(name) && Boolean(description) && !isLoading;
 
-    const onFormSubmitted = e => {
+    const onFormSubmitted = async (e) => {
         e.preventDefault();
-        const category = {
-            id: Date.now().toString(),
-            avatar: user1,
-            name: name,
-            description: description,
-            available: available,
-        };
-        dispatch(categoryAdded(category))
-        setName('');
-        setDescription('');
-        setAvailable('');
+
+        if (isValid) {
+            try {
+                await addNewCategory({ name, description, available, imageUrl: 'imageURL' }).unwrap();
+                setName('');
+                setDescription('');
+                setAvailable('');
+            } catch (err) {
+                console.log('::ERROR during adding category::')
+            }
+        }
     }
 
     return (
