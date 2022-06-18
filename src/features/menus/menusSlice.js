@@ -13,6 +13,8 @@ const initialState = [
         name: "Hanna Gover",
         description: "some description about category",
         category: "water",
+        price: 20,
+        currency: 1,
         available: false,
     },
     {
@@ -21,6 +23,8 @@ const initialState = [
         name: "Hanna Gover",
         description: "some description about category",
         category: "chicken",
+        price: 20,
+        currency: 1,
         available: true,
     },
     {
@@ -29,6 +33,8 @@ const initialState = [
         name: "Hanna Gover",
         description: "some description about category",
         category: "Fast food",
+        price: 20,
+        currency: 1,
         available: false,
     },
     {
@@ -37,6 +43,8 @@ const initialState = [
         name: "Hanna Gover",
         description: "some description about category",
         category: "Coca cola",
+        price: 20,
+        currency: 2,
         available: true,
     },
     {
@@ -45,6 +53,8 @@ const initialState = [
         name: "Hanna Gover",
         description: "some description about category",
         category: "Fruit",
+        price: 20,
+        currency: 2,
         available: true,
     },
 ];
@@ -54,8 +64,6 @@ const menusSlice = createSlice({
     initialState: initialState,
     reducers: {
         menuAdded: (state, action) => {
-            console.log('state:', state)
-            console.log('action:', action)
             state.push(action.payload);
         },
         menuRemoved: (state, action) => {

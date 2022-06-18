@@ -19,28 +19,34 @@ import user1 from "../../assets/images/users/user1.jpg";
 
 const AddMenuForm = () => {
 
-    const dispatch = useDispatch();
-
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
+    const [price, setPrice] = useState('');
+    const [currency, setCurrency] = useState('');
     const [category, setCategory] = useState('');
     const [available, setAvailable] = useState(false);
 
-    const categories = useSelector(state => state.categories);
+    const dispatch = useDispatch();
+    const categories = useSelector(state => state.categories.categories);
 
     const onNameChanged = e => setName(e.target.value);
     const onDescriptionChanged = e => setDescription(e.target.value);
     const onCategorySelected = e => setCategory(e.target.value)
+    const onPriceChanged = e => setPrice(e.target.value);
+    const onCurrencySelected = e => setCurrency(e.target.value);
     const onAvailableChecked = e => setAvailable(e.target.checked);
 
-    const isValid = Boolean(name) && Boolean(description) && Boolean(category);
+    const isValid = Boolean(name) && Boolean(description) && Boolean(price) && Boolean(category);
 
     const onFormSubmitted = e => {
+
         e.preventDefault();
         const menu = {
             id: Date.now().toString(),
             name: name,
             description: description,
+            price: price,
+            currency: currency,
             category: category,
             available: available,
             avatar: user1
@@ -48,6 +54,8 @@ const AddMenuForm = () => {
         dispatch(menuAdded(menu))
         setName('');
         setDescription('');
+        setPrice('');
+        setCurrency('');
         setCategory('');
         setAvailable(false);
 
@@ -86,6 +94,35 @@ const AddMenuForm = () => {
                                 />
                             </FormGroup>
                             <FormGroup>
+                                <Label for="menuPrice">Price</Label>
+                                <Input
+                                    id="menuPrice"
+                                    name="price"
+                                    placeholder="menu Price"
+                                    type="number"
+                                    value={price}
+                                    onChange={onPriceChanged}
+                                />
+                            </FormGroup>
+                            <FormGroup>
+                                <Label for="menuCurrency">Currency</Label>
+                                <Input
+                                    id="currency"
+                                    name="currencyId"
+                                    onChange={onCurrencySelected}
+                                    value={currency}
+                                    type="select"
+                                >
+                                    <option>Select Category</option>
+                                    <option value={1}>
+                                        Dollar
+                                    </option>
+                                    <option value={2}>
+                                        Derham
+                                    </option>
+                                </Input>
+                            </FormGroup>
+                            <FormGroup className="col-4">
                                 <Label for="category">Category</Label>
                                 <Input
                                     id="category"
@@ -104,14 +141,14 @@ const AddMenuForm = () => {
                                     ))}
                                 </Input>
                             </FormGroup>
-                            <Input
-                                type="checkbox"
-                                value={available}
-                                checked={available}
-                                onChange={onAvailableChecked}
-                            />&nbsp;
-                            <Label check>Is menu available?</Label>
                             <FormGroup>
+                                <Input
+                                    type="checkbox"
+                                    value={available}
+                                    checked={available}
+                                    onChange={onAvailableChecked}
+                                />&nbsp;
+                                <Label check>Is menu available?</Label>
                             </FormGroup>
                             <Button disabled={!isValid}>Save</Button>
                         </Form>
