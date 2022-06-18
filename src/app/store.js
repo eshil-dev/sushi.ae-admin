@@ -1,11 +1,13 @@
-import { configureStore } from '@reduxjs/toolkit';
+import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
 
-import categoriesReducer from '../features/categories/categoriesSlice';
 import menusReducer from '../features/menus/menusSlice';
+import { apiSlice } from '../features/api/apiSlice';
 
 export default configureStore({
     reducer: {
-        categories: categoriesReducer,
-        menus: menusReducer
-    }
+        menus: menusReducer,
+        [apiSlice.reducerPath]: apiSlice.reducer,
+    },
+    middleware: getDefaultMiddleware => getDefaultMiddleware()
+        .concat(apiSlice.middleware)
 });
