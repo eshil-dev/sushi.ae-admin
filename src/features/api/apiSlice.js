@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 export const apiSlice = createApi({
     reducerPath: 'api',
-    tagTypes: ['Category'],
+    tagTypes: ['Category', 'Menu'],
     baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:8080/api' }),
     endpoints: builder => ({
         getCategories: builder.query({
@@ -32,7 +32,43 @@ export const apiSlice = createApi({
             }),
             invalidatesTags: ['Category']
         }),
+        getMenus: builder.query({
+            query: () => '/menu',
+            providesTags: ['Menu'],
+        }),
+        addNewMenu: builder.mutation({
+            query: initialMenu => ({
+                url: '/menu',
+                method: 'POST',
+                body: initialMenu
+            }),
+            invalidatesTags: ['Menu'],
+        }),
+        updateMenu: builder.mutation({
+            query: newMenu => ({
+                url: `/menu/${newMenu._id}`,
+                method: 'PATCH',
+                body: newMenu,
+            }),
+            invalidatesTags: ['Menu'],
+        }),
+        removeMenu: builder.mutation({
+            query: menuId => ({
+                url: `/menu/${menuId}`,
+                method: 'DELETE',
+            }),
+            invalidatesTags: ['Menu']
+        }),
     }),
 });
 
-export const { useGetCategoriesQuery, useAddNewCategoryMutation, useRemoveCategoryMutation, useUpdateCategoryMutation } = apiSlice;
+export const {
+    useGetCategoriesQuery,
+    useAddNewCategoryMutation,
+    useRemoveCategoryMutation,
+    useUpdateCategoryMutation,
+    useGetMenusQuery,
+    useAddNewMenuMutation,
+    useUpdateMenuMutation,
+    useRemoveMenuMutation
+} = apiSlice;
