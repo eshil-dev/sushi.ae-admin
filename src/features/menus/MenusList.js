@@ -13,56 +13,94 @@ import {
     ModalBody,
     ModalFooter
 } from "reactstrap";
-import { useSelector, useDispatch } from "react-redux";
 import { useState } from "react";
 
-import { menuRemoved } from "./menusSlice";
+import {
+    useGetCategoriesQuery,
+    useUpdateMenuMutation,
+    useRemoveMenuMutation
+} from "../api/apiSlice";
+
+import { useGetMenusQuery } from "../api/apiSlice";
 
 const MenusList = () => {
 
-    const dispatch = useDispatch();
-    const menus = useSelector(state => state.menus);
-    const categories = useSelector(state => state.categories.categories);
+    const {
+        data: categories,
+        isLoading: categoryIsLoading,
+        isSuccess: categoryIsSuccess,
+        isError: categoryIsError,
+        error: categoryError
+    } = useGetCategoriesQuery();
+    const {
+        data: menus,
+        isLoading: menuIsLoading,
+        isSuccess: menuIsSuccess,
+        isError: menuIsError,
+        error: menuErorr
+    } = useGetMenusQuery();
+    const [removeMenu, { isRemoveMenuLoading }] = useRemoveMenuMutation();
+    const [updateMenu, { isUpdateMenuLoading }] = useUpdateMenuMutation();
 
     const [menuId, setMenuId] = useState('');
-
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
-    const [category, setCategory] = useState('');
+    const [categoryId, setCategoryId] = useState('');
     const [price, setPrice] = useState('');
     const [currency, setCurrency] = useState('');
     const [available, setAvailable] = useState(false);
 
-    const toggleUpdate = () => setIsUpdateModalOpen(!isUpdateModalOpen);
-    const toggleDelete = () => setIsDeleteModalOpen(!isDeleteModalOpen);
-
-    const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
-    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-
     const onNameChanged = e => setName(e.target.value)
     const onDescriptionChanged = e => setDescription(e.target.value)
-    const onCategorySelected = e => setCategory(e.target.value)
+    const onCategorySelected = e => setCategoryId(e.target.value)
     const onPriceChanged = e => setPrice(e.target.value)
     const onCurrencySelected = e => setCurrency(e.target.value)
     const onAvailableChanged = e => setAvailable(e.target.checked)
 
+    const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
+    const toggleUpdate = () => setIsUpdateModalOpen(!isUpdateModalOpen);
+    const toggleDelete = () => setIsDeleteModalOpen(!isDeleteModalOpen);
+
     const onUpdateClicked = menuId => {
-        const { name, description, category, price, currency, available } = menus.find(menu => menu.id === menuId);
-        setName(name);
-        setDescription(description);
-        setCategory(category);
-        setPrice(price);
-        setCurrency(currency);
-        setAvailable(available);
+        if (menuIsSuccess) {
+            const {
+                _id,
+                name,
+                description,
+                category,
+                price,
+                currency,
+                available
+            } = menus.find(menu => menu._id === menuId);
+            setMenuId(_id);
+            setName(name);
+            setDescription(description);
+            setCategoryId(category._id);
+            setPrice(price);
+            setCurrency(currency);
+            setAvailable(available);
+        }
     }
 
-    const onFormSubmitted = e => {
+    const onFormSubmitted = async (e) => {
         e.preventDefault();
-        console.log(name, description, category, price, currency, available)
+        const updatedMenu = {
+            _id: menuId,
+            name,
+            description,
+            category: categoryId,
+            price,
+            currency,
+            available
+        };
+        await updateMenu(updatedMenu).unwrap();
+        toggleUpdate();
     }
 
-    const onDeleteMenuClicked = () => {
-        dispatch(menuRemoved(menuId));
+    const onDeleteMenuClicked = async () => {
+        await removeMenu(menuId).unwrap();
         toggleDelete();
     }
 
@@ -81,6 +119,40 @@ const MenusList = () => {
             </ModalFooter>
         </Modal>
     )
+    let categoryComponent;
+    if (categoryIsSuccess) {
+        categoryComponent = (<FormGroup className="col-4">
+            <Label for="category">Category</Label>
+            <Input
+                id="category"
+                name="catId"
+                onChange={onCategorySelected}
+                type="select"
+            >
+                <option>Select Category</option>
+                {categories.map(category => (
+                    <option
+                        key={category._id}
+                        value={category._id}
+                    >
+                        {category.name}
+                    </option>
+                ))}
+            </Input>
+        </FormGroup>)
+    } else {
+        categoryComponent = (<FormGroup className="col-4">
+            <Label for="category">Category</Label>
+            <Input
+                id="category"
+                name="catId"
+                onChange={onCategorySelected}
+                type="select"
+            >
+                <option>Select Category</option>
+            </Input>
+        </FormGroup>)
+    }
 
     const updateModal = (
         <Modal isOpen={isUpdateModalOpen} toggle={toggleUpdate}>
@@ -97,17 +169,6 @@ const MenusList = () => {
                             type="text"
                             value={name}
                             onChange={onNameChanged}
-                        />
-                    </FormGroup>
-                    <FormGroup>
-                        <Label for="menuDescription">Description</Label>
-                        <Input
-                            id="menuDescription"
-                            name="text"
-                            placeholder="Menu description"
-                            type="text"
-                            value={description}
-                            onChange={onDescriptionChanged}
                         />
                     </FormGroup>
                     <FormGroup>
@@ -150,25 +211,7 @@ const MenusList = () => {
                             </option>
                         </Input>
                     </FormGroup>
-                    <FormGroup className="col-4">
-                        <Label for="category">Category</Label>
-                        <Input
-                            id="category"
-                            name="catId"
-                            onChange={onCategorySelected}
-                            type="select"
-                        >
-                            <option>Select Category</option>
-                            {categories.map(category => (
-                                <option
-                                    key={category.id}
-                                    value={category.name}
-                                >
-                                    {category.name}
-                                </option>
-                            ))}
-                        </Input>
-                    </FormGroup>
+                    {categoryComponent}
                     <FormGroup>
                         <Input
                             type="checkbox"
@@ -189,79 +232,86 @@ const MenusList = () => {
         </Modal>
     );
 
-    return (
-        <div>
-            {deleteModal}
-            {updateModal}
-            <Card>
-                <CardBody>
-                    <CardTitle tag="h5">Menus List</CardTitle>
-                    <Table className="no-wrap mt-3 align-middle" responsive borderless hover striped>
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Avatar</th>
-                                <th>Name & description</th>
-                                <th>Category</th>
-                                <th>Price</th>
-                                <th>Is available?</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {menus.map((menuData, index) => (
-                                <tr key={index} className="border-top">
-                                    <td>{index}</td>
-                                    <td>
-                                        <div className="d-flex align-items-center p-2">
-                                            <img
-                                                src={menuData.avatar}
-                                                className="rounded-circle"
-                                                alt="avatar"
-                                                width="45"
-                                                height="45"
-                                            />
 
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div className="ms-0">
-                                            <h6 className="mb-0">{menuData.name}</h6>
-                                            <span className="text-muted">{menuData.description}</span>
-                                        </div>
-                                    </td>
-                                    <td>{menuData.category}</td>
-                                    <td>{menuData.price} {menuData.currency === 1 ? <span style={{ fontWeight: "bolder", color: 'gray' }}>$</span> : <span style={{ fontWeight: "bolder", color: 'gray' }}>&</span>}</td>
-                                    <td>
-                                        {menuData.available === true ? (
-                                            <span className="p-2 bg-success rounded-circle  ms-3 bi bi-check-circle" style={{ color: 'white' }}></span>
-                                        ) : (
-                                            <span className="p-2 bg-warning rounded-circle ms-3 bi bi-x-circle" style={{ color: 'white' }}></span>
-                                        )}
-                                    </td>
-                                    <td>
-                                        <Button className="btn btn-sm" outline color="primary" onClick={() => {
-                                            toggleUpdate();
-                                            onUpdateClicked(menuData.id)
-                                        }}>
-                                            Update
-                                        </Button>
-                                        &nbsp;
-                                        <Button className="btn btn-sm" outline color="danger" onClick={() => {
-                                            setMenuId(menuData.id);
-                                            toggleDelete();
-                                        }}>
-                                            Delete
-                                        </Button>
-                                    </td>
+    if (menuIsLoading && !menuIsSuccess) {
+        return <h2>Loading...</h2>
+    } else if (menuIsError) {
+        return <h2>Something went wrong</h2>
+    }
+    if (menuIsSuccess)
+        return (
+            <div>
+                {deleteModal}
+                {updateModal}
+                <Card>
+                    <CardBody>
+                        <CardTitle tag="h5">Menus List</CardTitle>
+                        <Table className="no-wrap mt-3 align-middle" responsive borderless hover striped>
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Avatar</th>
+                                    <th>Name & description</th>
+                                    <th>Category</th>
+                                    <th>Price</th>
+                                    <th>Is available?</th>
+                                    <th>Action</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </Table>
-                </CardBody>
-            </Card>
-        </div>
-    );
+                            </thead>
+                            <tbody>
+                                {menus.map((menuData, index) => (
+                                    <tr key={index} className="border-top">
+                                        <td>{index}</td>
+                                        <td>
+                                            <div className="d-flex align-items-center p-2">
+                                                <img
+                                                    src={menuData.avatar}
+                                                    className="rounded-circle"
+                                                    alt="avatar"
+                                                    width="45"
+                                                    height="45"
+                                                />
+
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div className="ms-0">
+                                                <h6 className="mb-0">{menuData.name}</h6>
+                                                <span className="text-muted">{menuData.description}</span>
+                                            </div>
+                                        </td>
+                                        <td>{menuData.category.name}</td>
+                                        <td>{menuData.price} {menuData.currency === 1 ? <span style={{ fontWeight: "bolder", color: 'gray' }}>$</span> : <span style={{ fontWeight: "bolder", color: 'gray' }}>&</span>}</td>
+                                        <td>
+                                            {menuData.available === true ? (
+                                                <span className="p-2 bg-success rounded-circle  ms-3 bi bi-check-circle" style={{ color: 'white' }}></span>
+                                            ) : (
+                                                <span className="p-2 bg-warning rounded-circle ms-3 bi bi-x-circle" style={{ color: 'white' }}></span>
+                                            )}
+                                        </td>
+                                        <td>
+                                            <Button className="btn btn-sm" outline color="primary" onClick={() => {
+                                                toggleUpdate();
+                                                onUpdateClicked(menuData._id)
+                                            }}>
+                                                Update
+                                            </Button>
+                                            &nbsp;
+                                            <Button className="btn btn-sm" outline color="danger" onClick={() => {
+                                                toggleDelete();
+                                                setMenuId(menuData._id);
+                                            }}>
+                                                Delete
+                                            </Button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </Table>
+                    </CardBody>
+                </Card>
+            </div>
+        );
 };
 
 export default MenusList;

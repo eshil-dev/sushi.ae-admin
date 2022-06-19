@@ -11,11 +11,11 @@ import {
     Input,
 } from "reactstrap";
 
-import { useSelector, useDispatch } from "react-redux";
 import { useState } from "react";
-import { menuAdded } from "./menusSlice";
-
-import user1 from "../../assets/images/users/user1.jpg";
+import {
+    useGetCategoriesQuery,
+    useAddNewMenuMutation
+} from "../api/apiSlice";
 
 const AddMenuForm = () => {
 
@@ -23,42 +23,74 @@ const AddMenuForm = () => {
     const [description, setDescription] = useState('');
     const [price, setPrice] = useState('');
     const [currency, setCurrency] = useState('');
-    const [category, setCategory] = useState('');
+    const [categoryId, setCategoryId] = useState('');
     const [available, setAvailable] = useState(false);
 
-    const dispatch = useDispatch();
-    const categories = useSelector(state => state.categories.categories);
+    const { data: categories, isSuccess } = useGetCategoriesQuery();
+    const [addNewMenu, { isLoading: isAddMenuLoading }] = useAddNewMenuMutation();
 
     const onNameChanged = e => setName(e.target.value);
     const onDescriptionChanged = e => setDescription(e.target.value);
-    const onCategorySelected = e => setCategory(e.target.value)
+    const onCategorySelected = e => setCategoryId(e.target.value)
     const onPriceChanged = e => setPrice(e.target.value);
     const onCurrencySelected = e => setCurrency(e.target.value);
     const onAvailableChecked = e => setAvailable(e.target.checked);
 
-    const isValid = Boolean(name) && Boolean(description) && Boolean(price) && Boolean(category);
+    const isValid = Boolean(name) && Boolean(description) && Boolean(price) && Boolean(categoryId);
 
-    const onFormSubmitted = e => {
-
+    const onFormSubmitted = async (e) => {
         e.preventDefault();
-        const menu = {
-            id: Date.now().toString(),
-            name: name,
-            description: description,
-            price: price,
-            currency: currency,
-            category: category,
-            available: available,
-            avatar: user1
+        const newMenu = {
+            name,
+            description,
+            price,
+            currency,
+            category: categoryId,
+            available,
+            imageUrl: 'imageUrl'
         }
-        dispatch(menuAdded(menu))
+        await addNewMenu(newMenu).unwrap();
         setName('');
         setDescription('');
         setPrice('');
         setCurrency('');
-        setCategory('');
+        setCategoryId('');
         setAvailable(false);
+    }
 
+    let categoryComponent;
+    if (isSuccess) {
+        categoryComponent = (<FormGroup>
+            <Label for="category">Category</Label>
+            <Input
+                id="category"
+                name="catId"
+                onChange={onCategorySelected}
+                type="select"
+            >
+                <option>Select Category</option>
+                {categories.map(category => (
+                    <option
+                        key={category._id}
+                        value={category._id}
+                    >
+                        {category.name}
+                    </option>
+                ))}
+            </Input>
+        </FormGroup>)
+    } else {
+        categoryComponent = (<FormGroup>
+            <Label for="category">Category</Label>
+            <Input
+                id="category"
+                name="catId"
+                onChange={onCategorySelected}
+                type="select"
+            >
+                <option>Select Category</option>
+            </Input>
+        </FormGroup>)
     }
 
     return (
@@ -114,33 +146,15 @@ const AddMenuForm = () => {
                                     type="select"
                                 >
                                     <option>Select Category</option>
-                                    <option value={1}>
+                                    <option>
                                         Dollar
                                     </option>
-                                    <option value={2}>
+                                    <option>
                                         Derham
                                     </option>
                                 </Input>
                             </FormGroup>
-                            <FormGroup className="col-4">
-                                <Label for="category">Category</Label>
-                                <Input
-                                    id="category"
-                                    name="catId"
-                                    onChange={onCategorySelected}
-                                    type="select"
-                                >
-                                    <option>Select Category</option>
-                                    {categories.map(category => (
-                                        <option
-                                            key={category.id}
-                                            value={category.name}
-                                        >
-                                            {category.name}
-                                        </option>
-                                    ))}
-                                </Input>
-                            </FormGroup>
+                            {categoryComponent}
                             <FormGroup>
                                 <Input
                                     type="checkbox"
