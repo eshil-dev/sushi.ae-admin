@@ -14,29 +14,39 @@ import {
 import { useState } from "react";
 
 import { useAddNewCategoryMutation } from "../api/apiSlice";
+import { convertToBase64 } from "../../utils/ImageToBase64";
 
 const AddCategoryForm = () => {
 
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
+    const [imageName, setImageName] = useState('');
+    const [imageBase64, setImageBase64] = useState(undefined);
     const [available, setAvailable] = useState(false);
 
     const [addNewCategory, { isLoading }] = useAddNewCategoryMutation();
 
     const onNameChanged = e => setName(e.target.value);
     const onDescriptionChanged = e => setDescription(e.target.value);
-    const onAvailableChanged = e => setAvailable(e.target.checked);
+    const onImageSelected = async (e) => {
+        const base64Converted = await convertToBase64(e.target.files[0]);
+        setImageName(e.target.files[0].name.split('.')[0])
+        setImageBase64(base64Converted)
+    }
 
+    const onAvailableChanged = e => setAvailable(e.target.checked);
     const isValid = Boolean(name) && Boolean(description) && !isLoading;
 
     const onFormSubmitted = async (e) => {
         e.preventDefault();
-
         if (isValid) {
             try {
-                await addNewCategory({ name, description, available, imageUrl: 'imageURL' }).unwrap();
+                const category = { name, description, imageName, imageBase64, available }
+                await addNewCategory(category).unwrap();
                 setName('');
                 setDescription('');
+                setImageBase64(undefined);
+                setImageName('');
                 setAvailable('');
             } catch (err) {
                 console.log('::ERROR during adding category::')
@@ -74,6 +84,16 @@ const AddCategoryForm = () => {
                                     type="text"
                                     value={description}
                                     onChange={onDescriptionChanged}
+                                />
+                            </FormGroup>
+                            <FormGroup>
+                                <Label for="categoryImage">Image</Label>
+                                <Input
+                                    id="categoryImage"
+                                    name="catImage"
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={onImageSelected}
                                 />
                             </FormGroup>
                             <FormGroup>

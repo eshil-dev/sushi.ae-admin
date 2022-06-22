@@ -171,7 +171,7 @@ const CategoriesList = () => {
                                     <td>
                                         <div className="d-flex align-items-center p-2">
                                             <img
-                                                src={`../../assets/images/users/${catData.imageUrl}`}
+                                                src={catData.imageUrl}
                                                 className="rounded-circle"
                                                 alt="avatar"
                                                 width="45"
