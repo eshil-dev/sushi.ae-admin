@@ -16,9 +16,11 @@ const usersSlice = createSlice({
     initialState,
     reducers: {
         logOut: state => {
-            state.username = ''
-            state.email = ''
-            state.token = ''
+            state.username = '';
+            state.email = '';
+            state.token = '';
+            state.isSuccess = false;
+            localStorage.setItem('token', '');
         }
     },
     extraReducers: (builder) => {

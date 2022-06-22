@@ -22,6 +22,12 @@ const LoginForm = () => {
     const { token, isLoading, isSuccess, isError, errorMessage } = useSelector(state => state.user);
 
     useEffect(() => {
+        console.log(':::token:::', token)
+        console.log('::localStorage::', localStorage.getItem('token'))
+
+    }, [token])
+
+    useEffect(() => {
         if(isSuccess) {
             localStorage.setItem('token', token)
             navigate('/')
@@ -30,7 +36,7 @@ const LoginForm = () => {
             navigate('/login')
             toast.error('Login failed')
         }
-    }, [isSuccess, isError, errorMessage])
+    }, [isSuccess, isError, errorMessage, token])
     
     const onFormSubmitted = e => {
         e.preventDefault();

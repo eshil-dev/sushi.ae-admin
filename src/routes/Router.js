@@ -16,11 +16,9 @@ const Menus = lazy(() => import("../features/menus/MenusList"));
 const AddMenuForm = lazy(() => import("../features/menus/AddMenuForm"));
 
 /*****Routes******/
-const isLogedIn = true;
 
 var routes = [
   { path: "/login", exact: true, element: <Login /> },
-
   {
     path: "/",
     element: <FullLayout />,
@@ -31,7 +29,7 @@ var routes = [
       { path: "/add-category", exact: true, element: <AddCategoryForm /> },
       { path: "/add-menu", exact: true, element: <AddMenuForm /> },
       { path: "/menus", exact: true, element: <Menus /> },
-      { path: "/register", exact: true, element: <Register /> },
+      { path: "/users", exact: true, element: <Register /> },
     ],
   },
 ]
