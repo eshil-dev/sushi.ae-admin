@@ -6,6 +6,9 @@ const FullLayout = lazy(() => import("../layouts/FullLayout.js"));
 
 /***** Pages ****/
 
+const Login = lazy(() => import("../features/users/LoginForm"));
+const Register = lazy(() => import("../features/users/RegisterForm"));
+
 const Starter = lazy(() => import("../features/dashboard/Starter.js"));
 const Categories = lazy(() => import("../features/categories/CategoriesList"));
 const AddCategoryForm = lazy(() => import("../features/categories/AddCategoryFrom"));
@@ -13,8 +16,11 @@ const Menus = lazy(() => import("../features/menus/MenusList"));
 const AddMenuForm = lazy(() => import("../features/menus/AddMenuForm"));
 
 /*****Routes******/
+const isLogedIn = true;
 
-const ThemeRoutes = [
+var routes = [
+  { path: "/login", exact: true, element: <Login /> },
+
   {
     path: "/",
     element: <FullLayout />,
@@ -25,9 +31,11 @@ const ThemeRoutes = [
       { path: "/add-category", exact: true, element: <AddCategoryForm /> },
       { path: "/add-menu", exact: true, element: <AddMenuForm /> },
       { path: "/menus", exact: true, element: <Menus /> },
-
+      { path: "/register", exact: true, element: <Register /> },
     ],
   },
-];
+]
+
+const ThemeRoutes = routes;
 
 export default ThemeRoutes;
