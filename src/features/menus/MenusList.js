@@ -265,7 +265,7 @@ const MenusList = () => {
                                         <td>
                                             <div className="d-flex align-items-center p-2">
                                                 <img
-                                                    src={menuData.avatar}
+                                                    src={menuData.imageUrl}
                                                     className="rounded-circle"
                                                     alt="avatar"
                                                     width="45"

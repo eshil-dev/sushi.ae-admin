@@ -16,6 +16,7 @@ import {
     useGetCategoriesQuery,
     useAddNewMenuMutation
 } from "../api/apiSlice";
+import { convertToBase64 } from "../../utils/ImageToBase64";
 
 const AddMenuForm = () => {
 
@@ -23,6 +24,8 @@ const AddMenuForm = () => {
     const [description, setDescription] = useState('');
     const [price, setPrice] = useState('');
     const [currency, setCurrency] = useState('');
+    const [imageName, setImageName] = useState('');
+    const [imageBase64, setImageBase64] = useState(undefined);
     const [categoryId, setCategoryId] = useState('');
     const [available, setAvailable] = useState(false);
 
@@ -34,6 +37,12 @@ const AddMenuForm = () => {
     const onCategorySelected = e => setCategoryId(e.target.value)
     const onPriceChanged = e => setPrice(e.target.value);
     const onCurrencySelected = e => setCurrency(e.target.value);
+    const onImageSelected = async (e) => {
+        const base64Converted = await convertToBase64(e.target.files[0]);
+        setImageName(e.target.files[0].name.split('.')[0])
+        setImageBase64(base64Converted)
+    }
+
     const onAvailableChecked = e => setAvailable(e.target.checked);
 
     const isValid = Boolean(name) && Boolean(description) && Boolean(price) && Boolean(categoryId);
@@ -44,15 +53,18 @@ const AddMenuForm = () => {
             name,
             description,
             price,
+            imageName,
+            imageBase64,
             currency,
             category: categoryId,
             available,
-            imageUrl: 'imageUrl'
         }
         await addNewMenu(newMenu).unwrap();
         setName('');
         setDescription('');
         setPrice('');
+        setImageName('')
+        setImageBase64('')
         setCurrency('');
         setCategoryId('');
         setAvailable(false);
@@ -134,6 +146,15 @@ const AddMenuForm = () => {
                                     type="number"
                                     value={price}
                                     onChange={onPriceChanged}
+                                />
+                            </FormGroup>
+                            <FormGroup>
+                                <Label for="imageFile">Image</Label>
+                                <Input
+                                    id="imageFile"
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={onImageSelected}
                                 />
                             </FormGroup>
                             <FormGroup>
