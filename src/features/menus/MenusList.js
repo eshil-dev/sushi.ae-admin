@@ -22,6 +22,8 @@ import {
 } from "../api/apiSlice";
 
 import { useGetMenusQuery } from "../api/apiSlice";
+import { convertToBase64 } from "../../utils/ImageToBase64";
+import ImagePreview from "../../components/ImagePreview";
 
 const MenusList = () => {
 
@@ -45,6 +47,10 @@ const MenusList = () => {
     const [menuId, setMenuId] = useState('');
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
+    const [oldImageUrl, setOldImageUrl] = useState('');
+    const [imageName, setImageName] = useState('');
+    const [base64Image, setBase64Image] = useState('');
+    const [prevImage, setPrevImage] = useState(undefined);
     const [categoryId, setCategoryId] = useState('');
     const [price, setPrice] = useState('');
     const [currency, setCurrency] = useState('');
@@ -54,14 +60,39 @@ const MenusList = () => {
     const onDescriptionChanged = e => setDescription(e.target.value)
     const onCategorySelected = e => setCategoryId(e.target.value)
     const onPriceChanged = e => setPrice(e.target.value)
+    const onImageSelected = async (e) => {
+        const imageFile = e.target.files[0];
+        const base64Converted = await convertToBase64(imageFile);
+        setPrevImage(imageFile);
+        setImageName(imageFile.name.split('.')[0])
+        setBase64Image(base64Converted)
+    }
+
     const onCurrencySelected = e => setCurrency(e.target.value)
     const onAvailableChanged = e => setAvailable(e.target.checked)
 
     const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
-    const toggleUpdate = () => setIsUpdateModalOpen(!isUpdateModalOpen);
+    const toggleUpdate = () => {
+        setIsUpdateModalOpen(!isUpdateModalOpen)
+        resetInput();
+    }
     const toggleDelete = () => setIsDeleteModalOpen(!isDeleteModalOpen);
+
+    const resetInput = () => {
+        setMenuId('');
+        setName('');
+        setDescription('');
+        setOldImageUrl('')
+        setPrevImage('');
+        setImageName('')
+        setBase64Image('')
+        setCategoryId('');
+        setPrice('');
+        setCurrency('');
+        setAvailable(false);
+    }
 
     const onUpdateClicked = menuId => {
         if (menuIsSuccess) {
@@ -69,6 +100,7 @@ const MenusList = () => {
                 _id,
                 name,
                 description,
+                imageUrl,
                 category,
                 price,
                 currency,
@@ -77,6 +109,7 @@ const MenusList = () => {
             setMenuId(_id);
             setName(name);
             setDescription(description);
+            setOldImageUrl(imageUrl)
             setCategoryId(category._id);
             setPrice(price);
             setCurrency(currency);
@@ -84,13 +117,15 @@ const MenusList = () => {
         }
     }
 
-    const onFormSubmitted = async (e) => {
+    const onUpdateFormSubmitted = async (e) => {
         e.preventDefault();
         const updatedMenu = {
             _id: menuId,
             name,
             description,
             category: categoryId,
+            imageName,
+            base64Image,
             price,
             currency,
             available
@@ -121,42 +156,44 @@ const MenusList = () => {
     )
     let categoryComponent;
     if (categoryIsSuccess) {
-        categoryComponent = (<FormGroup className="col-4">
-            <Label for="category">Category</Label>
-            <Input
-                id="category"
-                name="catId"
-                onChange={onCategorySelected}
-                type="select"
-            >
-                <option>Select Category</option>
-                {categories.map(category => (
-                    <option
-                        key={category._id}
-                        value={category._id}
-                    >
-                        {category.name}
-                    </option>
-                ))}
-            </Input>
-        </FormGroup>)
+        categoryComponent =
+            <FormGroup>
+                <Label for="category">Category</Label>
+                <Input
+                    id="category"
+                    name="catId"
+                    onChange={onCategorySelected}
+                    type="select"
+                >
+                    <option>Select Category</option>
+                    {categories.map(category => (
+                        <option
+                            key={category._id}
+                            value={category._id}
+                        >
+                            {category.name}
+                        </option>
+                    ))}
+                </Input>
+            </FormGroup>
     } else {
-        categoryComponent = (<FormGroup className="col-4">
-            <Label for="category">Category</Label>
-            <Input
-                id="category"
-                name="catId"
-                onChange={onCategorySelected}
-                type="select"
-            >
-                <option>Select Category</option>
-            </Input>
-        </FormGroup>)
+        categoryComponent =
+            <FormGroup>
+                <Label for="category">Category</Label>
+                <Input
+                    id="category"
+                    name="catId"
+                    onChange={onCategorySelected}
+                    type="select"
+                >
+                    <option>Select Category</option>
+                </Input>
+            </FormGroup>
     }
 
     const updateModal = (
         <Modal isOpen={isUpdateModalOpen} toggle={toggleUpdate}>
-            <Form onSubmit={onFormSubmitted}>
+            <Form onSubmit={onUpdateFormSubmitted}>
                 <ModalHeader
                     toggle={toggleUpdate}>Update Menu</ModalHeader>
                 <ModalBody>
@@ -194,6 +231,21 @@ const MenusList = () => {
                         />
                     </FormGroup>
                     <FormGroup>
+                        <h6>Old menu image</h6>
+                        <img src={oldImageUrl} height='80px' width='80px' />
+                    </FormGroup>
+                    <FormGroup>
+                        <Label for="menuUpdateImage">Update menu image</Label>
+                        <Input
+                            id="menuUpdateImage"
+                            name="menuNewImage"
+                            type="file"
+                            accept="image/*"
+                            onChange={onImageSelected}
+                        />
+                    </FormGroup>
+                    <ImagePreview image={prevImage} />
+                    <FormGroup>
                         <Label for="menuCurrency">Currency</Label>
                         <Input
                             id="currency"
@@ -202,7 +254,7 @@ const MenusList = () => {
                             value={currency}
                             type="select"
                         >
-                            <option>Select Category</option>
+                            <option>Select Currency</option>
                             <option value={1}>
                                 Dollar
                             </option>
@@ -281,26 +333,42 @@ const MenusList = () => {
                                             </div>
                                         </td>
                                         <td>{menuData.category.name}</td>
-                                        <td>{menuData.price} {menuData.currency === 1 ? <span style={{ fontWeight: "bolder", color: 'gray' }}>$</span> : <span style={{ fontWeight: "bolder", color: 'gray' }}>&</span>}</td>
                                         <td>
-                                            {menuData.available === true ? (
-                                                <span className="p-2 bg-success rounded-circle  ms-3 bi bi-check-circle" style={{ color: 'white' }}></span>
-                                            ) : (
-                                                <span className="p-2 bg-warning rounded-circle ms-3 bi bi-x-circle" style={{ color: 'white' }}></span>
-                                            )}
+                                            {menuData.price}
+                                            {menuData.currency === 1 ?
+                                                <span style={{ fontWeight: "bolder", color: 'gray' }}>$</span> :
+                                                <span style={{ fontWeight: "bolder", color: 'gray' }}>&</span>}</td>
+                                        <td>
+                                            {menuData.available === true ?
+                                                <span
+                                                    className="p-2 bg-success rounded-circle  ms-3 bi bi-check-circle"
+                                                    style={{ color: 'white' }} />
+                                                :
+                                                <span
+                                                    className="p-2 bg-warning rounded-circle ms-3 bi bi-x-circle"
+                                                    style={{ color: 'white' }} />
+                                            }
                                         </td>
                                         <td>
-                                            <Button className="btn btn-sm" outline color="primary" onClick={() => {
-                                                toggleUpdate();
-                                                onUpdateClicked(menuData._id)
-                                            }}>
+                                            <Button
+                                                className="btn btn-sm"
+                                                outline
+                                                color="primary"
+                                                onClick={() => {
+                                                    toggleUpdate();
+                                                    onUpdateClicked(menuData._id)
+                                                }}>
                                                 Update
                                             </Button>
                                             &nbsp;
-                                            <Button className="btn btn-sm" outline color="danger" onClick={() => {
-                                                toggleDelete();
-                                                setMenuId(menuData._id);
-                                            }}>
+                                            <Button
+                                                className="btn btn-sm"
+                                                outline
+                                                color="danger"
+                                                onClick={() => {
+                                                    toggleDelete();
+                                                    setMenuId(menuData._id);
+                                                }}>
                                                 Delete
                                             </Button>
                                         </td>

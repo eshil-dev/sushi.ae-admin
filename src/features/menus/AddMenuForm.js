@@ -10,13 +10,14 @@ import {
     Label,
     Input,
 } from "reactstrap";
-
 import { useState } from "react";
+
 import {
     useGetCategoriesQuery,
     useAddNewMenuMutation
 } from "../api/apiSlice";
 import { convertToBase64 } from "../../utils/ImageToBase64";
+import ImagePreview from "../../components/ImagePreview";
 
 const AddMenuForm = () => {
 
@@ -25,6 +26,7 @@ const AddMenuForm = () => {
     const [price, setPrice] = useState('');
     const [currency, setCurrency] = useState('');
     const [imageName, setImageName] = useState('');
+    const [prevImage, setPrevImage] = useState(undefined);
     const [imageBase64, setImageBase64] = useState(undefined);
     const [categoryId, setCategoryId] = useState('');
     const [available, setAvailable] = useState(false);
@@ -38,8 +40,10 @@ const AddMenuForm = () => {
     const onPriceChanged = e => setPrice(e.target.value);
     const onCurrencySelected = e => setCurrency(e.target.value);
     const onImageSelected = async (e) => {
-        const base64Converted = await convertToBase64(e.target.files[0]);
-        setImageName(e.target.files[0].name.split('.')[0])
+        const image = e.target.files[0]
+        const base64Converted = await convertToBase64(image);
+        setPrevImage(image)
+        setImageName(image.name.split('.')[0])
         setImageBase64(base64Converted)
     }
 
@@ -64,7 +68,8 @@ const AddMenuForm = () => {
         setDescription('');
         setPrice('');
         setImageName('')
-        setImageBase64('')
+        setPrevImage(undefined)
+        setImageBase64(undefined)
         setCurrency('');
         setCategoryId('');
         setAvailable(false);
@@ -72,37 +77,39 @@ const AddMenuForm = () => {
 
     let categoryComponent;
     if (isSuccess) {
-        categoryComponent = (<FormGroup>
-            <Label for="category">Category</Label>
-            <Input
-                id="category"
-                name="catId"
-                onChange={onCategorySelected}
-                type="select"
-            >
-                <option>Select Category</option>
-                {categories.map(category => (
-                    <option
-                        key={category._id}
-                        value={category._id}
-                    >
-                        {category.name}
-                    </option>
-                ))}
-            </Input>
-        </FormGroup>)
+        categoryComponent =
+            <FormGroup>
+                <Label for="category">Category</Label>
+                <Input
+                    id="category"
+                    name="catId"
+                    onChange={onCategorySelected}
+                    type="select"
+                >
+                    <option>Select Category</option>
+                    {categories.map(category => (
+                        <option
+                            key={category._id}
+                            value={category._id}
+                        >
+                            {category.name}
+                        </option>
+                    ))}
+                </Input>
+            </FormGroup>
     } else {
-        categoryComponent = (<FormGroup>
-            <Label for="category">Category</Label>
-            <Input
-                id="category"
-                name="catId"
-                onChange={onCategorySelected}
-                type="select"
-            >
-                <option>Select Category</option>
-            </Input>
-        </FormGroup>)
+        categoryComponent =
+            <FormGroup>
+                <Label for="category">Category</Label>
+                <Input
+                    id="category"
+                    name="catId"
+                    onChange={onCategorySelected}
+                    type="select"
+                >
+                    <option>Select Category</option>
+                </Input>
+            </FormGroup>
     }
 
     return (
@@ -157,6 +164,7 @@ const AddMenuForm = () => {
                                     onChange={onImageSelected}
                                 />
                             </FormGroup>
+                            <ImagePreview image={prevImage} />
                             <FormGroup>
                                 <Label for="menuCurrency">Currency</Label>
                                 <Input
