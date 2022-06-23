@@ -21,12 +21,12 @@ export const apiSlice = createApi({
             }),
         }),
         getCategories: builder.query({
-            query: () => '/menu/category',
+            query: () => '/category',
             providesTags: ['Category']
         }),
         addNewCategory: builder.mutation({
             query: initialCategory => ({
-                url: '/menu/category',
+                url: '/category',
                 method: 'POST',
                 body: initialCategory
             }),
@@ -34,7 +34,7 @@ export const apiSlice = createApi({
         }),
         updateCategory: builder.mutation({
             query: editedCategory => ({
-                url: `/menu/category/${editedCategory._id}`,
+                url: `/category/${editedCategory._id}`,
                 method: 'PATCH',
                 body: editedCategory,
             }),
@@ -42,7 +42,7 @@ export const apiSlice = createApi({
         }),
         removeCategory: builder.mutation({
             query: catId => ({
-                url: `/menu/category/${catId}`,
+                url: `/category/${catId}`,
                 method: 'DELETE',
             }),
             invalidatesTags: ['Category']
