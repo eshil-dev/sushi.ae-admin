@@ -8,19 +8,20 @@ import {
     Form,
     FormGroup,
     Label,
-    Input,
+    Input
 } from "reactstrap";
-
 import { useState } from "react";
 
 import { useAddNewCategoryMutation } from "../api/apiSlice";
 import { convertToBase64 } from "../../utils/ImageToBase64";
+import ImagePreview from "../../components/ImagePreview";
 
 const AddCategoryForm = () => {
 
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const [imageName, setImageName] = useState('');
+    const [prevImage, setPrevImage] = useState(undefined);
     const [imageBase64, setImageBase64] = useState(undefined);
     const [available, setAvailable] = useState(false);
 
@@ -29,8 +30,10 @@ const AddCategoryForm = () => {
     const onNameChanged = e => setName(e.target.value);
     const onDescriptionChanged = e => setDescription(e.target.value);
     const onImageSelected = async (e) => {
-        const base64Converted = await convertToBase64(e.target.files[0]);
-        setImageName(e.target.files[0].name.split('.')[0])
+        const imageFile = e.target.files[0];
+        const base64Converted = await convertToBase64(imageFile);
+        setPrevImage(imageFile);
+        setImageName(imageFile.name.split('.')[0])
         setImageBase64(base64Converted)
     }
 
@@ -45,8 +48,9 @@ const AddCategoryForm = () => {
                 await addNewCategory(category).unwrap();
                 setName('');
                 setDescription('');
-                setImageBase64(undefined);
                 setImageName('');
+                setPrevImage(undefined);
+                setImageBase64(undefined);
                 setAvailable('');
             } catch (err) {
                 console.log('::ERROR during adding category::')
@@ -96,6 +100,7 @@ const AddCategoryForm = () => {
                                     onChange={onImageSelected}
                                 />
                             </FormGroup>
+                            <ImagePreview image={prevImage} />
                             <FormGroup>
                                 <Input
                                     type="checkbox"
