@@ -15,7 +15,13 @@ import {
 } from "reactstrap";
 import { useState } from "react";
 
-import { useGetCategoriesQuery, useRemoveCategoryMutation, useUpdateCategoryMutation } from "../api/apiSlice";
+import {
+    useGetCategoriesQuery,
+    useRemoveCategoryMutation,
+    useUpdateCategoryMutation
+} from "../api/apiSlice";
+import { convertToBase64 } from "../../utils/ImageToBase64";
+import ImagePreview from "../../components/ImagePreview";
 
 const CategoriesList = () => {
 
@@ -25,17 +31,39 @@ const CategoriesList = () => {
     const [catId, setCatId] = useState('');
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
+    const [oldImageUrl, setOldImageUrl] = useState('');
+    const [imageName, setImageName] = useState('');
+    const [prevImage, setPrevImage] = useState(undefined);
+    const [imageBase64, setImageBase64] = useState('');
     const [available, setAvailable] = useState(false);
 
     const { data: categories, isLoading, isSuccess, isError, error } = useGetCategoriesQuery();
     const [updateCategory] = useUpdateCategoryMutation();
     const [removeCategory] = useRemoveCategoryMutation();
 
-    const toggleUpdate = () => setIsUpdateModalOpen(!isUpdateModalOpen);
+    const resetInput = () => {
+        setName('');
+        setDescription('');
+        setOldImageUrl('');
+        setPrevImage(undefined);
+        setAvailable(false)
+    }
+
+    const toggleUpdate = () => {
+        setIsUpdateModalOpen(!isUpdateModalOpen);
+        resetInput();
+    };
     const toggleDelete = () => setIsDeleteModalOpen(!isDeleteModalOpen);
 
     const onNameChanged = e => setName(e.target.value);
     const onDescriptionChanged = e => setDescription(e.target.value);
+    const onImageSelected = async (e) => {
+        const imageFile = e.target.files[0];
+        const base64Converted = await convertToBase64(imageFile);
+        setPrevImage(imageFile);
+        setImageName(imageFile.name.split('.')[0])
+        setImageBase64(base64Converted)
+    }
     const onAvailableChanged = e => setAvailable(e.target.checked);
 
     const deleteCategory = async () => {
@@ -50,9 +78,12 @@ const CategoriesList = () => {
     const onUpdateButtonClicked = catId => {
         toggleUpdate()
         setCatId(catId);
-        const categoryItem = categories.find((item) => item._id === catId);
+        const categoryItem = categories.find(
+            item => item._id === catId
+        );
         setName(categoryItem.name);
         setDescription(categoryItem.description);
+        setOldImageUrl(categoryItem.imageUrl);
         setAvailable(categoryItem.available)
     }
 
@@ -61,19 +92,18 @@ const CategoriesList = () => {
         try {
             const updatedCategory = {
                 _id: catId,
-                imageUrl: 'user.jpg',
-                name: name,
-                description: description,
-                available: available,
+                name,
+                description,
+                imageName,
+                imageBase64,
+                available,
             };
             await updateCategory(updatedCategory).unwrap();
-
         } catch (err) {
-
+            console.log('Error during update operation')
         } finally {
             toggleUpdate();
         }
-
     }
 
     const deleteModal = (
@@ -120,6 +150,21 @@ const CategoriesList = () => {
                             onChange={onDescriptionChanged}
                         />
                     </FormGroup>
+                    <FormGroup>
+                        <h6>Old image</h6>
+                        <img src={oldImageUrl} height='80px' width='80px' />
+                    </FormGroup>
+                    <FormGroup>
+                        <Label for="categoryUpdateImage">Update image</Label>
+                        <Input
+                            id="categoryUpdateImage"
+                            name="catImage"
+                            type="file"
+                            accept="image/*"
+                            onChange={onImageSelected}
+                        />
+                    </FormGroup>
+                    <ImagePreview image={prevImage} />
                     <FormGroup>
                         <Input
                             type="checkbox"
@@ -186,24 +231,37 @@ const CategoriesList = () => {
                                             <span className="text-muted">{catData.description}</span>
                                         </div>
                                     </td>
-                                    <td>{
-
-                                    }
+                                    <td>
                                         {catData.available === true ? (
-                                            <span className="p-2 bg-success rounded-circle  ms-3 bi bi-check-circle" style={{ color: 'white' }}></span>
+                                            <span
+                                                className="p-2 bg-success rounded-circle  ms-3 bi bi-check-circle"
+                                                style={{ color: 'white' }}
+                                            />
                                         ) : (
-                                            <span className="p-2 bg-warning rounded-circle ms-3 bi bi-x-circle" style={{ color: 'white' }}></span>
+                                            <span
+                                                className="p-2 bg-warning rounded-circle ms-3 bi bi-x-circle"
+                                                style={{ color: 'white' }}
+                                            />
                                         )}
                                     </td>
                                     <td>
-                                        <Button className="btn btn-sm" outline color="primary" onClick={() => onUpdateButtonClicked(catData._id)}>
+                                        <Button
+                                            className="btn btn-sm"
+                                            outline
+                                            color="primary"
+                                            onClick={() => onUpdateButtonClicked(catData._id)}
+                                        >
                                             Update
                                         </Button>
                                         &nbsp;
-                                        <Button className="btn btn-sm" outline color="danger" onClick={() => {
-                                            toggleDelete();
-                                            setCatId(catData._id);
-                                        }}>
+                                        <Button
+                                            className="btn btn-sm"
+                                            outline
+                                            color="danger"
+                                            onClick={() => {
+                                                toggleDelete();
+                                                setCatId(catData._id);
+                                            }}>
                                             Delete
                                         </Button>
                                     </td>
