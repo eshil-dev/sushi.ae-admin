@@ -1,57 +1,81 @@
-import { Form, FormGroup, Label, Input, Button, Card } from "reactstrap"
-import { useSelector, useDispatch } from "react-redux";
+import { Form, FormGroup, Label, Input, Button } from "reactstrap"
 import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import { useEffect, useState } from "react"
 
 import { useLoginUserMutation } from "./authApi";
+import { errorToTxt } from "../../utils/errorTotxtHelper";
+import './Login.css';
+
+const EMAIL_REGX =
+    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 const LoginForm = () => {
 
     const navigate = useNavigate();
-    const dispatch = useDispatch();
-
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [validate, setValidate] = useState({ emailState: '', passwordState: '' });
 
-    const onEmailChanged = e => setEmail(e.target.value);
-    const onPasswordChanged = e => setPassword(e.target.value);
+    const onEmailChanged = e => {
+        EMAIL_REGX.test(e.target.value)
+            ? setValidate({ emailState: 'has-success' })
+            : setValidate({ emailState: 'has-danger' })
+        setEmail(e.target.value)
+    };
 
-    const [loginUser] = useLoginUserMutation();
+    const onPasswordChanged = e => {
+        e.target.value.length < 8 || e.target.value.length > 32
+            ? setValidate({ passwordState: 'has-danger' })
+            : setValidate({ passwordState: 'has-success' })
+        setPassword(e.target.value)
+    };
 
-    const { token, isLoading, isSuccess, isError, errorMessage } = useSelector(state => state.user);
+    const [loginUser, { isLoading, isSuccess, isError, data }] = useLoginUserMutation();
 
     useEffect(() => {
-        console.log(':::token:::', token)
-        console.log('::localStorage::', localStorage.getItem('token'))
-
-    }, [token])
+        clearState();
+        const emailError = data?.errors?.email?.msg;
+        const passwordError = data?.errors?.password?.msg;
+        if (emailError)
+            toast.error(errorToTxt(emailError))
+        if (passwordError)
+            toast.error(errorToTxt(passwordError))
+    }, [data]);
 
     useEffect(() => {
-        if(isSuccess) {
-            localStorage.setItem('token', token)
-            navigate('/')
+        if (localStorage.getItem('token')) {
+            navigate('/', { replace: true })
         }
-        if(isError) {
+        if (isSuccess && data.token) {
+            localStorage.setItem('token', data.token)
+            navigate('/', { replace: true })
+        }
+        if (isError) {
             navigate('/login')
             toast.error('Login failed')
         }
-    }, [isSuccess, isError, errorMessage, token])
-    
+    }, [isSuccess, isError, data])
+
+    const clearState = () => {
+        setEmail('');
+        setPassword('')
+        setValidate({ emailState: '', passwordState: '' })
+    }
+
     const onFormSubmitted = e => {
         e.preventDefault();
         loginUser({ email, password });
-        setEmail('');
-        setPassword('')
+        clearState();
     }
 
     return (
-        <Card style={{ padding: 20, }}>
+        <div className="loginForm-container">
             <Toaster
                 position="top-center"
                 reverseOrder={false}
             />
-            <Form className="col-6" onSubmit={onFormSubmitted}>
+            <Form onSubmit={onFormSubmitted}>
                 <FormGroup>
                     <Label for="email">Email Address</Label>
                     <Input
@@ -61,6 +85,8 @@ const LoginForm = () => {
                         type="email"
                         value={email}
                         onChange={onEmailChanged}
+                        valid={validate.emailState === 'has-success'}
+                        invalid={validate.emailState === 'has-danger'}
                     />
                 </FormGroup>
                 <FormGroup>
@@ -72,11 +98,13 @@ const LoginForm = () => {
                         type="password"
                         value={password}
                         onChange={onPasswordChanged}
+                        valid={validate.passwordState === 'has-success'}
+                        invalid={validate.passwordState === 'has-danger'}
                     />
                 </FormGroup>
-                <Button color="primary">Login</Button>
+                <Button color="primary" disabled={isLoading}>Login</Button>
             </Form>
-        </Card>
+        </div>
     )
 }
 
