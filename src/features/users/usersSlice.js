@@ -2,8 +2,6 @@ import { createSlice } from "@reduxjs/toolkit";
 import { authApi } from "./authApi";
 
 const initialState = {
-    username: '',
-    email: '',
     token: localStorage.getItem('token') || '',
     isLoading: false,
     isSuccess: false,
@@ -16,11 +14,10 @@ const usersSlice = createSlice({
     initialState,
     reducers: {
         logOut: state => {
-            state.username = '';
-            state.email = '';
-            state.token = '';
+            state.isLoading = false;
             state.isSuccess = false;
-            localStorage.setItem('token', '');
+            state.isError = false;
+            localStorage.removeItem('token');
         }
     },
     extraReducers: (builder) => {
@@ -30,14 +27,12 @@ const usersSlice = createSlice({
                 state.isSuccess = false;
                 state.errorMessage = payload.errors
             }  else {
-                state.username = payload.fullName
-                state.email = payload.email
                 state.token = payload.token;
                 state.isLoading = false
                 state.isSuccess = true
                 state.isError = false
             }
-        }).addMatcher(authApi.endpoints.loginUser.matchPending, (state, action) => {
+        }).addMatcher(authApi.endpoints.loginUser.matchPending, (state) => {
             state.isLoading = true;
         }).addMatcher(authApi.endpoints.loginUser.matchRejected, (state, action) => {
             state.isError = true;
