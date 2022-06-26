@@ -28,5 +28,7 @@ export const errorToTxt = (err) => {
             return 'Token is empty';
         case EMAIL_IS_IN_WRONG_FORMAT:
             return 'Email is in wrong format'
+        default:
+            return 'Not matched.'
     }
 }
