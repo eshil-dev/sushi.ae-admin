@@ -222,7 +222,6 @@ const CategoriesList = () => {
                                                 width="45"
                                                 height="45"
                                             />
-
                                         </div>
                                     </td>
                                     <td>

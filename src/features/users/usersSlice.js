@@ -36,7 +36,6 @@ const usersSlice = createSlice({
                 state.isLoading = false
                 state.isSuccess = true
                 state.isError = false
-                state.errorMessage = ''
             }
         }).addMatcher(authApi.endpoints.loginUser.matchPending, (state, action) => {
             state.isLoading = true;
