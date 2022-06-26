@@ -2,41 +2,57 @@ import { Form, FormGroup, Label, Input, Button } from "reactstrap"
 import { useState } from "react"
 
 import { useRegisterUserMutation } from "../api/apiSlice";
+import { convertToBase64 } from "../../utils/ImageToBase64";
+import ImagePreview from "../../components/ImagePreview";
 
 const RegiserForm = () => {
 
-    const [RegisterUser, { isLoading }] = useRegisterUserMutation();
+    const [RegisterUser, { isLoading, isSuccess, isError, data }] = useRegisterUserMutation();
 
     const [fullName, setFullName] = useState('');
     const [email, setEmail] = useState('');
+    const [imageName, setImageName] = useState('');
+    const [prevImage, setPrevImage] = useState('');
+    const [imageBase64, setImageBase64] = useState(undefined);
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
 
     const onFullNameChanged = e => setFullName(e.target.value);
     const onEmailChanged = e => setEmail(e.target.value);
+
+    const onImageSelected = async (e) => {
+        const image = e.target.files[0]
+        const base64Converted = await convertToBase64(image);
+        setPrevImage(image)
+        setImageName(image.name.split('.')[0])
+        setImageBase64(base64Converted)
+    }
+
     const onPasswordChanged = e => setPassword(e.target.value);
     const onConfirmPasswordChanged = e => setConfirmPassword(e.target.value);
 
     const isValid = Boolean(fullName) && Boolean(email) && (Boolean(password) && Boolean(confirmPassword) && password === confirmPassword);
 
-    const onFormSubmitted = async (e) => {
-        e.preventDefault();        
-        const userData = { fullName, email, password, confirmPassword }
-
-        await RegisterUser(userData).unwrap();
-
+    const clearState = () => {
         setFullName('');
         setEmail('');
+        setImageBase64(undefined);
+        setPrevImage(undefined)
         setPassword('');
         setConfirmPassword('');
-        
+    }
 
+    const onFormSubmitted = async (e) => {
+        e.preventDefault();
+        const userData = { fullName, email, imageName, imageBase64, password, confirmPassword }
+        await RegisterUser(userData).unwrap();
+        clearState();
     }
 
     return (
-        <Form className="col-12" onSubmit={onFormSubmitted}>
-            <FormGroup className="row">
-                <FormGroup className="col-4">
+        <Form className="form" onSubmit={onFormSubmitted}>
+            <FormGroup>
+                <FormGroup>
                     <Label for="fullName">Full name</Label>
                     <Input
                         id="fullName"
@@ -47,7 +63,7 @@ const RegiserForm = () => {
                         onChange={onFullNameChanged}
                     />
                 </FormGroup>
-                <FormGroup className="col-4">
+                <FormGroup>
                     <Label for="email">Email Address</Label>
                     <Input
                         id="email"
@@ -59,8 +75,18 @@ const RegiserForm = () => {
                     />
                 </FormGroup>
             </FormGroup>
+            <FormGroup>
+                <Label for="imageFile">Add Image profile</Label>
+                <Input
+                    id="imageFile"
+                    type="file"
+                    accept="image/*"
+                    onChange={onImageSelected}
+                />
+            </FormGroup>
+            <ImagePreview image={prevImage} txt={'Profile is not selected yet'}/>
             <FormGroup className="row">
-                <FormGroup className="col-4">
+                <FormGroup>
                     <Label for="password">Password</Label>
                     <Input
                         id="password"
@@ -71,7 +97,7 @@ const RegiserForm = () => {
                         onChange={onPasswordChanged}
                     />
                 </FormGroup>
-                <FormGroup className="col-4">
+                <FormGroup>
                     <Label for="confirmPassword">Confirm password</Label>
                     <Input
                         id="confirmPassword"
@@ -83,7 +109,7 @@ const RegiserForm = () => {
                     />
                 </FormGroup>
             </FormGroup>
-            <Button disabled={!isValid} outline color="info">Register</Button>
+            <Button disabled={!isValid} color="primary">Create user</Button>
         </Form>
     )
 }
