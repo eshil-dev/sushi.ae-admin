@@ -34,10 +34,14 @@ const navigation = [
     href: "/menus",
     icon: "bi bi-card-text",
   },
-  
   {
-    title: "Mangage users",
-    href: "/users",
+    title: "Add new user",
+    href: "/add-user",
+    icon: "bi bi-columns",
+  },
+  {
+    title: "All users",
+    href: "/all-user",
     icon: "bi bi-columns",
   },
 ];
