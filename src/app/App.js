@@ -10,6 +10,7 @@ const FullLayout = lazy(() => import("../layouts/FullLayout.js"));
 
 const Login = lazy(() => import("../features/users/LoginForm"));
 const Register = lazy(() => import("../features/users/RegisterForm"));
+const Users = lazy(() => import("../features/users/UsersList"));
 
 const Starter = lazy(() => import("../features/dashboard/Starter.js"));
 const Categories = lazy(() => import("../features/categories/CategoriesList"));
@@ -27,7 +28,8 @@ const App = () => {
         <Route path="/categories" element={<ProtectedRoute><Categories /></ProtectedRoute>} />
         <Route path="/add-menu" element={<ProtectedRoute><AddMenuForm /></ProtectedRoute>} />
         <Route path="/menus" element={<ProtectedRoute><Menus /></ProtectedRoute>} />
-        <Route path="/users" element={<ProtectedRoute><Register /></ProtectedRoute>} />
+        <Route path="/add-user" element={<ProtectedRoute><Register /></ProtectedRoute>} />
+        <Route path="/all-user" element={<ProtectedRoute><Users /></ProtectedRoute>} />
       </Route>
       <Route path="/*" element={<p>Page not found!</p>} />
       <Route path="/login" element={<Login />} />

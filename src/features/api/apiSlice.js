@@ -2,12 +2,12 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 export const apiSlice = createApi({
     reducerPath: 'api',
-    tagTypes: ['Category', 'Menu'],
+    tagTypes: ['Category', 'Menu', 'User'],
     baseQuery: fetchBaseQuery({
         baseUrl: 'http://localhost:8080/api', prepareHeaders: (headers, { getState }) => {
             const token = getState().user.token;
             if (token) {
-                headers.set('authorization', token);
+                headers.set('authorization', `Bearer ${token}`);
             }
             return headers;
         }
@@ -19,6 +19,11 @@ export const apiSlice = createApi({
                 method: 'POST',
                 body: userData,
             }),
+            invalidatesTags: ['User']
+        }),
+        getAllUsers: builder.query({
+            query: () => '/user',
+            providesTags: ['User'],
         }),
         getCategories: builder.query({
             query: () => '/category',
@@ -79,6 +84,7 @@ export const apiSlice = createApi({
 
 export const {
     useRegisterUserMutation,
+    useGetAllUsersQuery,
     useGetCategoriesQuery,
     useAddNewCategoryMutation,
     useRemoveCategoryMutation,
