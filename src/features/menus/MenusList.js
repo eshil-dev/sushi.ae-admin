@@ -260,7 +260,7 @@ const MenusList = () => {
                             onChange={onImageSelected}
                         />
                     </FormGroup>
-                    <ImagePreview image={prevImage} />
+                    <ImagePreview image={prevImage} txt={'New menu image is not selected yet'}/>
                     <FormGroup>
                         <Label for="menuCurrency">Currency</Label>
                         <Input

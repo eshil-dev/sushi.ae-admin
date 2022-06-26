@@ -183,7 +183,7 @@ const AddMenuForm = () => {
                                     onChange={onImageSelected}
                                 />
                             </FormGroup>
-                            <ImagePreview image={prevImage} />
+                            <ImagePreview image={prevImage} txt={'Image for this menu is not selected yet'}/>
                             <FormGroup>
                                 <Label for="menuCurrency">Currency</Label>
                                 <Input

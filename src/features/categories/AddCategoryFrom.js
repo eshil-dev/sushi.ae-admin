@@ -100,7 +100,7 @@ const AddCategoryForm = () => {
                                     onChange={onImageSelected}
                                 />
                             </FormGroup>
-                            <ImagePreview image={prevImage} />
+                            <ImagePreview image={prevImage} txt={'Image for this category is not selected yet'}/>
                             <FormGroup>
                                 <Input
                                     type="checkbox"
