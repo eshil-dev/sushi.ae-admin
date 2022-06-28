@@ -56,7 +56,7 @@ const UsersList = () => {
     };
     const [userId, setUserId] = useState('')
     const [fullName, setFullName] = useState('')
-    const [email, setEmail] = useState('')
+    const [phone, setPhone] = useState('')
     const [oldImageUrl, setOldImageUrl] = useState('')
     const [imageName, setImageName] = useState('')
     const [prevImage, setPrevImage] = useState('')
@@ -65,7 +65,7 @@ const UsersList = () => {
     const clearUpdateState = () => {
         setUserId('')
         setFullName('')
-        setEmail('')
+        setPhone('')
         setOldImageUrl('')
         setImageName('')
         setPrevImage('')
@@ -73,7 +73,7 @@ const UsersList = () => {
     }
 
     const onFullNameChanged = e => setFullName(e.target.value);
-    const onEmailChanged = e => setEmail(e.target.value);
+    const onPhoneChanged = e => setPhone(e.target.value);
     const onImageSelected = async (e) => {
         const imageFile = e.target.files[0];
         const base64Converted = await convertToBase64(imageFile);
@@ -89,7 +89,7 @@ const UsersList = () => {
             user => user._id === userId
         );
         setFullName(userInfo.fullName);
-        setEmail(userInfo.email);
+        setPhone(userInfo.phone);
         setOldImageUrl(userId.imageAvatarUrl);
     }
 
@@ -99,7 +99,7 @@ const UsersList = () => {
             const updatedUser = {
                 _id: userId,
                 fullName,
-                email,
+                phone,
                 imageName,
                 base64Image,
             };
@@ -272,14 +272,14 @@ const UsersList = () => {
                         />
                     </FormGroup>
                     <FormGroup>
-                        <Label for="emailAddress">Email address</Label>
+                        <Label for="phoneNumber">Phone number</Label>
                         <Input
-                            id="emailAddress"
-                            name="email"
-                            placeholder="Email address"
-                            type="email"
-                            value={email}
-                            onChange={onEmailChanged}
+                            id="phoneNumber"
+                            name="phone"
+                            placeholder="phone number"
+                            type="phone"
+                            value={phone}
+                            onChange={onPhoneChanged}
                         />
                     </FormGroup>
                     <FormGroup>
@@ -403,6 +403,7 @@ const UsersList = () => {
                                 <th>Avatar</th>
                                 <th>Full name</th>
                                 <th>Email Address</th>
+                                <th>Phone number</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -426,6 +427,9 @@ const UsersList = () => {
                                     </td>
                                     <td>
                                         {userData.email}
+                                    </td>
+                                    <td>
+                                        {userData.phone}
                                     </td>
                                     <td>
                                         <Button
