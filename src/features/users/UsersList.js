@@ -90,7 +90,7 @@ const UsersList = () => {
         );
         setFullName(userInfo.fullName);
         setPhone(userInfo.phone);
-        setOldImageUrl(userId.imageAvatarUrl);
+        setOldImageUrl(userInfo.imageAvatarUrl);
     }
 
     const onUpdateFormSubmitted = async (e) => {
