@@ -432,7 +432,7 @@ const UsersList = () => {
                                             className="btn btn-sm"
                                             outline
                                             color="primary"
-                                            onClick={() => { onUpdateButtonClicked(userData._id) }}
+                                            onClick={() => onUpdateButtonClicked(userData._id)}
                                         >
                                             Update
                                         </Button>
@@ -453,10 +453,7 @@ const UsersList = () => {
                                             className="btn btn-sm"
                                             outline
                                             color="warning"
-                                            onClick={() => {
-                                                console.log('::userData.email::', userData.email)
-                                                changeCurrentPassword(userData.email)
-                                            }}
+                                            onClick={() => changeCurrentPassword(userData.email)}
                                         >
                                             Change password
                                         </Button>
