@@ -1,5 +1,6 @@
 import { Form, FormGroup, Label, Input, Button } from "reactstrap"
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import toast, { Toaster } from "react-hot-toast";
 
 import { useRegisterUserMutation } from "../api/apiSlice";
 import { convertToBase64 } from "../../utils/ImageToBase64";
@@ -11,6 +12,7 @@ const RegiserForm = () => {
 
     const [fullName, setFullName] = useState('');
     const [email, setEmail] = useState('');
+    const [phone, setPhone] = useState('');
     const [imageName, setImageName] = useState('');
     const [prevImage, setPrevImage] = useState('');
     const [imageBase64, setImageBase64] = useState(undefined);
@@ -19,7 +21,7 @@ const RegiserForm = () => {
 
     const onFullNameChanged = e => setFullName(e.target.value);
     const onEmailChanged = e => setEmail(e.target.value);
-
+    const onPhoneChanged = e => setPhone(e.target.value);
     const onImageSelected = async (e) => {
         const image = e.target.files[0]
         const base64Converted = await convertToBase64(image);
@@ -27,15 +29,15 @@ const RegiserForm = () => {
         setImageName(image.name.split('.')[0])
         setImageBase64(base64Converted)
     }
-
     const onPasswordChanged = e => setPassword(e.target.value);
     const onConfirmPasswordChanged = e => setConfirmPassword(e.target.value);
 
-    const isValid = Boolean(fullName) && Boolean(email) && (Boolean(password) && Boolean(confirmPassword) && password === confirmPassword);
+    const isValid = Boolean(fullName) && Boolean(email) && Boolean(phone) && (Boolean(password) && Boolean(confirmPassword) && password === confirmPassword);
 
     const clearState = () => {
         setFullName('');
         setEmail('');
+        setPhone('')
         setImageBase64(undefined);
         setPrevImage(undefined)
         setPassword('');
@@ -44,13 +46,23 @@ const RegiserForm = () => {
 
     const onFormSubmitted = async (e) => {
         e.preventDefault();
-        const userData = { fullName, email, imageName, imageBase64, password, confirmPassword }
+        const userData = { fullName, email, phone, imageName, imageBase64, password, confirmPassword }
         await RegisterUser(userData).unwrap();
         clearState();
     }
 
+    useEffect(() => {
+        if (isSuccess)
+            toast.success('User has been register successfully.')
+
+    }, [isSuccess])
+
     return (
         <Form className="form" onSubmit={onFormSubmitted}>
+            <Toaster
+                position="top-center"
+                reverseOrder={false}
+            />
             <FormGroup>
                 <FormGroup>
                     <Label for="fullName">Full name</Label>
@@ -74,6 +86,17 @@ const RegiserForm = () => {
                         onChange={onEmailChanged}
                     />
                 </FormGroup>
+                <FormGroup>
+                    <Label for="phoneNumber">Phone number</Label>
+                    <Input
+                        id="phoneNumber"
+                        name="phone"
+                        placeholder="Phone number"
+                        type="phone"
+                        value={phone}
+                        onChange={onPhoneChanged}
+                    />
+                </FormGroup>
             </FormGroup>
             <FormGroup>
                 <Label for="imageFile">Add Image profile</Label>
@@ -84,7 +107,7 @@ const RegiserForm = () => {
                     onChange={onImageSelected}
                 />
             </FormGroup>
-            <ImagePreview image={prevImage} txt={'Profile is not selected yet'}/>
+            <ImagePreview image={prevImage} txt={'Profile is not selected yet'} />
             <FormGroup className="row">
                 <FormGroup>
                     <Label for="password">Password</Label>
