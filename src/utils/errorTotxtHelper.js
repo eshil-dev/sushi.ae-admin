@@ -7,6 +7,7 @@ export const USER_EXISTS_ALREADY = 'USER_EXISTS_ALREADY';
 export const USER_DOES_NOT_EXIST = 'USER_DOES_NOT_EXIST';
 export const TOKEN_IS_EMPTY = 'TOKEN_IS_EMPTY';
 export const EMAIL_IS_IN_WRONG_FORMAT = 'EMAIL_IS_IN_WRONG_FORMAT';
+export const WRONG_CURRENT_PASSWORD = 'WRONG_CURRENT_PASSWORD'
 
 export const errorToTxt = (err) => {
     switch (err) {
@@ -28,6 +29,8 @@ export const errorToTxt = (err) => {
             return 'Token is empty';
         case EMAIL_IS_IN_WRONG_FORMAT:
             return 'Email is in wrong format'
+        case WRONG_CURRENT_PASSWORD:
+            return 'Current password is wrong please correct it'
         default:
             return 'Not matched.'
     }
