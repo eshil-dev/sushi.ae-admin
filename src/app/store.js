@@ -1,7 +1,7 @@
 import { configureStore, getDefaultMiddleware } from '@reduxjs/toolkit';
 
 import { apiSlice } from '../features/api/apiSlice';
-import usersSlice from '../features/users/usersSlice';
+import usersSlice from '../features/auth/usersSlice';
 
 export default configureStore({
     reducer: {
