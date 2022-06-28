@@ -25,6 +25,30 @@ export const apiSlice = createApi({
             query: () => '/user',
             providesTags: ['User'],
         }),
+        updateUser: builder.mutation({
+            query: editedUser => ({
+                url: `/user/${editedUser._id}`,
+                method: 'PATCH',
+                body: editedUser,
+            }),
+            invalidatesTags: ['User'],
+        }),
+        removeUser: builder.mutation({
+            query: userID => ({
+                url: `/user/${userID}`,
+                method: 'DELETE',
+            }),
+            invalidatesTags: ['User']
+        }),
+        changeUserPassword: builder.mutation({
+            query: newPassword => ({
+                url: `/user/changePassword`,
+                method: 'POST',
+                body: newPassword,
+                validateStatus: (_, result) => (result),
+            }),
+            invalidatesTags: ['User']
+        }),
         getCategories: builder.query({
             query: () => '/category',
             providesTags: ['Category']
@@ -85,6 +109,9 @@ export const apiSlice = createApi({
 export const {
     useRegisterUserMutation,
     useGetAllUsersQuery,
+    useUpdateUserMutation,
+    useRemoveUserMutation,
+    useChangeUserPasswordMutation,
     useGetCategoriesQuery,
     useAddNewCategoryMutation,
     useRemoveCategoryMutation,
