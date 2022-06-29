@@ -53,6 +53,7 @@ const MenusList = () => {
     const [prevImage, setPrevImage] = useState(undefined);
     const [categoryId, setCategoryId] = useState('');
     const [price, setPrice] = useState('');
+    const [discount, setDiscount] = useState('');
     const [currency, setCurrency] = useState('');
     const [available, setAvailable] = useState(false);
 
@@ -60,6 +61,7 @@ const MenusList = () => {
     const onDescriptionChanged = e => setDescription(e.target.value)
     const onCategorySelected = e => setCategoryId(e.target.value)
     const onPriceChanged = e => setPrice(e.target.value)
+    const onDiscountChanged = e => setDiscount(e.target.value)
     const onImageSelected = async (e) => {
         const imageFile = e.target.files[0];
         const base64Converted = await convertToBase64(imageFile);
@@ -103,6 +105,7 @@ const MenusList = () => {
                 imageUrl,
                 category,
                 price,
+                discount,
                 currency,
                 available
             } = menus.find(menu => menu._id === menuId);
@@ -112,6 +115,7 @@ const MenusList = () => {
             setOldImageUrl(imageUrl)
             setCategoryId(category._id);
             setPrice(price);
+            setDiscount(discount)
             setCurrency(currency);
             setAvailable(available);
         }
@@ -127,6 +131,7 @@ const MenusList = () => {
             imageName,
             base64Image,
             price,
+            discount,
             currency,
             available
         };
@@ -201,7 +206,7 @@ const MenusList = () => {
                         <Label for="menuName">Name</Label>
                         <Input
                             id="menuName"
-                            name="text"
+                            name="menuName"
                             placeholder="Menu name"
                             type="text"
                             value={name}
@@ -214,7 +219,7 @@ const MenusList = () => {
                             id="menuDescription"
                             name="text"
                             placeholder="Menu description"
-                            type="text"
+                            type="description"
                             value={description}
                             onChange={onDescriptionChanged}
                         />
@@ -223,11 +228,22 @@ const MenusList = () => {
                         <Label for="menuPrice">Price</Label>
                         <Input
                             id="menuPrice"
-                            name="text"
+                            name="price"
                             placeholder="Price"
                             type="number"
                             value={price}
                             onChange={onPriceChanged}
+                        />
+                    </FormGroup>
+                    <FormGroup>
+                        <Label for="menuDiscount">Discount</Label>
+                        <Input
+                            id="menuDiscount"
+                            name="discount"
+                            placeholder="Discount"
+                            type="number"
+                            value={discount}
+                            onChange={onDiscountChanged}
                         />
                     </FormGroup>
                     <FormGroup>
@@ -244,7 +260,7 @@ const MenusList = () => {
                             onChange={onImageSelected}
                         />
                     </FormGroup>
-                    <ImagePreview image={prevImage} />
+                    <ImagePreview image={prevImage} txt={'New menu image is not selected yet'}/>
                     <FormGroup>
                         <Label for="menuCurrency">Currency</Label>
                         <Input
@@ -306,6 +322,7 @@ const MenusList = () => {
                                     <th>Name & description</th>
                                     <th>Category</th>
                                     <th>Price</th>
+                                    <th>Discount</th>
                                     <th>Is available?</th>
                                     <th>Action</th>
                                 </tr>
@@ -336,8 +353,10 @@ const MenusList = () => {
                                         <td>
                                             {menuData.price}
                                             {menuData.currency === 1 ?
-                                                <span style={{ fontWeight: "bolder", color: 'gray' }}>$</span> :
-                                                <span style={{ fontWeight: "bolder", color: 'gray' }}>&</span>}</td>
+                                                <span style={{ fontWeight: "bolder", color: 'gray' }}>&nbsp;$</span> :
+                                                <span style={{ fontWeight: "bolder", color: 'gray' }}>&nbsp;&</span>}
+                                        </td>
+                                        <td>{menuData.discount}</td>
                                         <td>
                                             {menuData.available === true ?
                                                 <span

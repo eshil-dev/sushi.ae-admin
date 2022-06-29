@@ -24,6 +24,7 @@ const AddMenuForm = () => {
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const [price, setPrice] = useState('');
+    const [discount, setDiscount] = useState('');
     const [currency, setCurrency] = useState('');
     const [imageName, setImageName] = useState('');
     const [prevImage, setPrevImage] = useState(undefined);
@@ -38,6 +39,7 @@ const AddMenuForm = () => {
     const onDescriptionChanged = e => setDescription(e.target.value);
     const onCategorySelected = e => setCategoryId(e.target.value)
     const onPriceChanged = e => setPrice(e.target.value);
+    const onDiscountChanged = e => setDiscount(e.target.value);
     const onCurrencySelected = e => setCurrency(e.target.value);
     const onImageSelected = async (e) => {
         const image = e.target.files[0]
@@ -51,12 +53,26 @@ const AddMenuForm = () => {
 
     const isValid = Boolean(name) && Boolean(description) && Boolean(price) && Boolean(categoryId);
 
+    const clearState = () => {
+        setName('');
+        setDescription('');
+        setPrice('');
+        setDiscount('');
+        setImageName('')
+        setPrevImage(undefined)
+        setImageBase64(undefined)
+        setCurrency('');
+        setCategoryId('');
+        setAvailable(false);
+    }
+
     const onFormSubmitted = async (e) => {
         e.preventDefault();
         const newMenu = {
             name,
             description,
             price,
+            discount,
             imageName,
             imageBase64,
             currency,
@@ -64,15 +80,7 @@ const AddMenuForm = () => {
             available,
         }
         await addNewMenu(newMenu).unwrap();
-        setName('');
-        setDescription('');
-        setPrice('');
-        setImageName('')
-        setPrevImage(undefined)
-        setImageBase64(undefined)
-        setCurrency('');
-        setCategoryId('');
-        setAvailable(false);
+        clearState();
     }
 
     let categoryComponent;
@@ -156,6 +164,17 @@ const AddMenuForm = () => {
                                 />
                             </FormGroup>
                             <FormGroup>
+                                <Label for="menuDiscount">Discount</Label>
+                                <Input
+                                    id="menuDiscount"
+                                    name="discount"
+                                    placeholder="menu Discount"
+                                    type="number"
+                                    value={discount}
+                                    onChange={onDiscountChanged}
+                                />
+                            </FormGroup>
+                            <FormGroup>
                                 <Label for="imageFile">Image</Label>
                                 <Input
                                     id="imageFile"
@@ -164,7 +183,7 @@ const AddMenuForm = () => {
                                     onChange={onImageSelected}
                                 />
                             </FormGroup>
-                            <ImagePreview image={prevImage} />
+                            <ImagePreview image={prevImage} txt={'Image for this menu is not selected yet'}/>
                             <FormGroup>
                                 <Label for="menuCurrency">Currency</Label>
                                 <Input

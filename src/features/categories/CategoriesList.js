@@ -164,7 +164,7 @@ const CategoriesList = () => {
                             onChange={onImageSelected}
                         />
                     </FormGroup>
-                    <ImagePreview image={prevImage} />
+                    <ImagePreview image={prevImage} txt={'New category image is not selected yet'}/>
                     <FormGroup>
                         <Input
                             type="checkbox"
@@ -222,7 +222,6 @@ const CategoriesList = () => {
                                                 width="45"
                                                 height="45"
                                             />
-
                                         </div>
                                     </td>
                                     <td>

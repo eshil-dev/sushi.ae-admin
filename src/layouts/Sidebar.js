@@ -5,7 +5,7 @@ import { Link, useLocation } from "react-router-dom";
 const navigation = [
   {
     title: "Dashboard",
-    href: "/starter",
+    href: "/",
     icon: "bi bi-speedometer2",
   },
   {
@@ -34,10 +34,14 @@ const navigation = [
     href: "/menus",
     icon: "bi bi-card-text",
   },
-  
   {
-    title: "Users",
-    href: "/users",
+    title: "Add new user",
+    href: "/add-user",
+    icon: "bi bi-columns",
+  },
+  {
+    title: "All users",
+    href: "/all-user",
     icon: "bi bi-columns",
   },
 ];

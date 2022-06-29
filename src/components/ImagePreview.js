@@ -1,11 +1,11 @@
 import { FormGroup } from "reactstrap"
 
-const ImagePreview = ({ image }) => {
+const ImagePreview = ({ image, txt }) => {
     let imagePreview =
         <p
             style={{ color: 'lightseagreen', fontStyle: 'italic' }}
         >
-            New image is not selected yet
+            {txt}
         </p>
     if (image) {
         imagePreview =
