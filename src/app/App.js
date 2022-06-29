@@ -1,5 +1,5 @@
 import { lazy } from "react";
-import { Route, Routes, useRoutes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 
 import ProtectedRoute from './ProtectedRoute';
 
@@ -8,7 +8,7 @@ const FullLayout = lazy(() => import("../layouts/FullLayout.js"));
 
 /***** Pages ****/
 
-const Login = lazy(() => import("../features/users/LoginForm"));
+const Login = lazy(() => import("../features/auth/LoginForm"));
 const Register = lazy(() => import("../features/users/RegisterForm"));
 const Users = lazy(() => import("../features/users/UsersList"));
 

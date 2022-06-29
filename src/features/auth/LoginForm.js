@@ -5,7 +5,7 @@ import { useEffect, useState } from "react"
 
 import { useLoginUserMutation } from "./authApi";
 import { errorToTxt } from "../../utils/errorTotxtHelper";
-import './Login.css';
+import '../../assets/css/Login.css';
 
 const EMAIL_REGX =
     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;

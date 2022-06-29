@@ -13,7 +13,7 @@ import {
 import { ReactComponent as LogoWhite } from "../assets/images/logos/xtremelogowhite.svg";
 import user1 from "../assets/images/users/user1.jpg";
 import { useDispatch } from "react-redux";
-import { logOut } from "../features/users/usersSlice";
+import { logOut } from "../features/auth/usersSlice";
 import { useNavigate } from "react-router-dom";
 
 
