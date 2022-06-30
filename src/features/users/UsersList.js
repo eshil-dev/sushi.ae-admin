@@ -142,7 +142,10 @@ const UsersList = () => {
 
     // Operation for changing password
     const [isPasswordChangeModalOpen, setIsPasswordChangeModalOpen] = useState(false);
-    const toggleChangePassword = () => setIsPasswordChangeModalOpen(!isPasswordChangeModalOpen);
+    const toggleChangePassword = () => {
+        setIsPasswordChangeModalOpen(!isPasswordChangeModalOpen);
+        clearChangePasswordState();
+    };
 
     const [emailAdd, setEmailAdd] = useState('')
     const [currentPassword, setCurrentPassword] = useState('')

@@ -1,10 +1,12 @@
-import { ReactComponent as LogoDark } from "../assets/images/logos/monsterlogo.svg";
 import { Link } from "react-router-dom";
+import sushi_logo from '../assets/images/logos/sushi-log.jpeg';
 
 const Logo = () => {
   return (
     <Link to="/">
-      <LogoDark />
+      <div style={{ marginLeft: '8px', marginBottom: '-15px', padding: '0px' }}>
+        <img src={sushi_logo} style={{ width: '120px' }} />
+      </div>
     </Link>
   );
 };
