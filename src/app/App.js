@@ -13,6 +13,7 @@ const Register = lazy(() => import("../features/users/RegisterForm"));
 const Users = lazy(() => import("../features/users/UsersList"));
 
 const Starter = lazy(() => import("../features/dashboard/Starter.js"));
+const OrderList = lazy(() => import("../features/orders/OrderList"));
 const Categories = lazy(() => import("../features/categories/CategoriesList"));
 const AddCategoryForm = lazy(() => import("../features/categories/AddCategoryFrom"));
 const Menus = lazy(() => import("../features/menus/MenusList"));
@@ -23,7 +24,7 @@ const App = () => {
     <Routes>
       <Route element={<FullLayout />}>
         <Route path="/" element={<ProtectedRoute><Starter /></ProtectedRoute>} />
-        <Route path="/orders" element={<ProtectedRoute><p>Order page is not completed yet</p></ProtectedRoute>} />
+        <Route path="/orders" element={<ProtectedRoute><OrderList /></ProtectedRoute>} />
         <Route path="/add-category" element={<ProtectedRoute><AddCategoryForm /></ProtectedRoute>} />
         <Route path="/categories" element={<ProtectedRoute><Categories /></ProtectedRoute>} />
         <Route path="/add-menu" element={<ProtectedRoute><AddMenuForm /></ProtectedRoute>} />
