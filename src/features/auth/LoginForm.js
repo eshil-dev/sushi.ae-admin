@@ -1,4 +1,4 @@
-import { Form, FormGroup, Label, Input, Button } from "reactstrap"
+import { Form, FormGroup, Label, Input, Button, Row } from "reactstrap"
 import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import { useEffect, useState } from "react"
@@ -77,22 +77,24 @@ const LoginForm = () => {
             />
             <Form onSubmit={onFormSubmitted}>
                 <FormGroup>
-                    <Label for="email">Email Address</Label>
+                    <Label className="fs-5" for="email">Email Address</Label>
                     <Input
                         id="email"
                         name="email"
                         placeholder="Email address"
                         type="email"
                         value={email}
+                        className="fs-5 rounded-0"
                         onChange={onEmailChanged}
                         valid={validate.emailState === 'has-success'}
                         invalid={validate.emailState === 'has-danger'}
                     />
                 </FormGroup>
                 <FormGroup>
-                    <Label className="lar" for="password">Password</Label>
+                    <Label className="fs-5" for="password">Password</Label>
                     <Input
                         id="password"
+                        className="fs-5 rounded-0"
                         name="text"
                         placeholder="Password"
                         type="password"
@@ -102,7 +104,9 @@ const LoginForm = () => {
                         invalid={validate.passwordState === 'has-danger'}
                     />
                 </FormGroup>
-                <Button color="primary" disabled={isLoading}>Login</Button>
+                <Row className="px-3">
+                <Button color="sushi rounded-0 btn-lg" disabled={isLoading}>Login</Button>
+                </Row>
             </Form>
         </div>
     )
