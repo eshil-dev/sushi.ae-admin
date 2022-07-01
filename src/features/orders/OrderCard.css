@@ -1,0 +1,8 @@
+
+/* Small Devices, Tablets */
+@media only screen and (min-width : 768px) {
+    .border-start-end-sm{
+        border-left: 1px solid #d9e2ef;
+        border-right: 1px solid #d9e2ef;
+    }
+}

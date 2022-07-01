@@ -11,10 +11,11 @@ import {
   Button,
 } from "reactstrap";
 import { ReactComponent as LogoWhite } from "../assets/images/logos/xtremelogowhite.svg";
-import user1 from "../assets/images/users/user1.jpg";
+import user4 from "../assets/images/users/user4.jpg";
 import { useDispatch } from "react-redux";
 import { logOut } from "../features/auth/usersSlice";
 import { useNavigate } from "react-router-dom";
+import Logo from "./Logo";
 
 
 const Header = () => {
@@ -36,22 +37,25 @@ const Header = () => {
     document.getElementById("sidebarArea").classList.toggle("showSidebar");
   };
   return (
-    <Navbar style={{backgroundColor: '#FF5400'}} dark expand="md" className="bg-gradient">
+    <Navbar style={{backgroundColor: '#008e07'}} dark expand="md" className="">
       <div className="d-flex align-items-center">
         <NavbarBrand href="/" className="d-lg-none">
-          <LogoWhite />
         </NavbarBrand>
         <Button
-          color="primary"
-          className=" d-lg-none"
+          color="light"
+          className="d-lg-none"
           onClick={() => showMobilemenu()}
         >
           <i className="bi bi-list"></i>
         </Button>
+
+        {/* hide the header logo  on sm screen */}
+        {/* <Logo className="d-lg-none"/> */}
+        
       </div>
       <div className="hstack gap-2">
         <Button
-          color="primary"
+          color="light"
           size="sm"
           className="d-sm-block d-md-none"
           onClick={Handletoggle}
@@ -68,7 +72,7 @@ const Header = () => {
         <Dropdown isOpen={dropdownOpen} toggle={toggle}>
           <DropdownToggle color="transparent">
             <img
-              src={user1}
+              src={user4}
               alt="profile"
               className="rounded-circle"
               width="30"
