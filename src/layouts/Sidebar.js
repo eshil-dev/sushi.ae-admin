@@ -58,8 +58,8 @@ const Sidebar = () => {
         <Logo />
         <Button
           close
-          size="sm"
-          className="ms-auto d-lg-none"
+          size="lg"
+          className="ms-auto d-lg-none "
           onClick={() => showMobilemenu()}
         ></Button>
       </div>

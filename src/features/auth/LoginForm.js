@@ -90,7 +90,7 @@ const LoginForm = () => {
                     />
                 </FormGroup>
                 <FormGroup>
-                    <Label for="password">Password</Label>
+                    <Label className="lar" for="password">Password</Label>
                     <Input
                         id="password"
                         name="text"
