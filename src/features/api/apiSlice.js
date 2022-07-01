@@ -2,7 +2,7 @@ import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 export const apiSlice = createApi({
     reducerPath: 'api',
-    tagTypes: ['Category', 'Menu', 'User'],
+    tagTypes: ['Category', 'Menu', 'User', 'Order'],
     baseQuery: fetchBaseQuery({
         baseUrl: 'http://localhost:8080/api', prepareHeaders: (headers, { getState }) => {
             const token = getState().user.token;
@@ -103,6 +103,18 @@ export const apiSlice = createApi({
             }),
             invalidatesTags: ['Menu']
         }),
+        getOrders: builder.query({
+            query: () => '/order',
+            providesTags: ['Order']
+        }),
+        updateOrderStatus: builder.mutation({
+            query: (newStatus) => ({
+                url: `/order/${newStatus._id}`,
+                method: 'PATCH',
+                body: newStatus
+            }),
+            invalidatesTags: ['Order']
+        })
     }),
 });
 
@@ -119,5 +131,7 @@ export const {
     useGetMenusQuery,
     useAddNewMenuMutation,
     useUpdateMenuMutation,
-    useRemoveMenuMutation
+    useRemoveMenuMutation,
+    useGetOrdersQuery,
+    useUpdateOrderStatusMutation
 } = apiSlice;
