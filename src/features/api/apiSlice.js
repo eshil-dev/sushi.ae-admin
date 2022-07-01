@@ -4,7 +4,7 @@ export const apiSlice = createApi({
     reducerPath: 'api',
     tagTypes: ['Category', 'Menu', 'User'],
     baseQuery: fetchBaseQuery({
-        baseUrl: 'http://localhost:8080/api', prepareHeaders: (headers, { getState }) => {
+        baseUrl: 'https://sushidotae.herokuapp.com/api', prepareHeaders: (headers, { getState }) => {
             const token = getState().user.token;
             if (token) {
                 headers.set('authorization', `Bearer ${token}`);
