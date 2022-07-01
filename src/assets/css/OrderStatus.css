@@ -1,0 +1,18 @@
+.order-card {
+    width: 33.3%;
+    padding: 6px;
+    margin: 8px;
+}
+.order-status {
+    background-color: rgba(18, 192, 5, 0.794);
+    border-radius: 8px;
+    text-align: center;
+}
+.order-status p {
+    padding: 5px;
+    margin-top: 0%;
+    font-weight: bold;
+    font-size: 12px;
+    letter-spacing: 1ch;
+    color: white;
+}

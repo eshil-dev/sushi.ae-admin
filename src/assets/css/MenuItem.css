@@ -1,0 +1,31 @@
+.menu-card {
+    width: 33.3%;
+    padding: 15px;
+    margin: 8px;
+}
+.menu-item {
+    display: flex;
+    flex: auto;
+    justify-content: space-between;
+}
+.item {
+    display: flex;
+    flex: auto;
+}
+.menu-content {
+    font-size: 14px;
+    font-weight: bold;
+}
+.item-price {
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.menu-total-price {
+    display: flex;
+    flex: auto;
+    justify-content: space-between;
+    margin-left: 8px;
+    margin-right: 8px;
+}
+

@@ -1,0 +1,54 @@
+
+/* Style for Customer card  */
+.customer-card {
+    width: 33.3%;
+    margin: 8px;
+    padding: 8px;
+    height: min-content;
+    border: 1px solid lightgray;
+    border-radius: 5px;
+}
+
+.customer-name {
+    display: flex;
+    flex: auto;
+    justify-content: space-between;
+    margin-top: 5px;
+    margin-bottom: -20px;
+}
+#c-name {
+    font-weight: bold;
+    font-size: 15px;
+    font-style: italic;
+    color: rgb(88, 80, 80);
+} 
+#c-phone {
+    font-weight: bold;
+    font-size: 12px;
+    color: rgb(88, 80, 80);
+    font-style: normal;
+    letter-spacing: 2px;
+}
+.customer-address-label {
+    font-weight: bold;
+    font-size: 15px;
+}
+.customer-full-address {
+    font-size: 14px;
+    color: #6c6a6a;
+}
+#copy-icon {
+    color: rgb(33, 145, 183);
+    margin-right: 6px;
+}
+#copy-icon:hover {
+    cursor: pointer;
+    color: blue;
+}
+#location-icon {
+    color: rgb(33, 145, 183);
+}
+#location-icon:hover {
+    cursor: pointer;
+    color: blue;
+}

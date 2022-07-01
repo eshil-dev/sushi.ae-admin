@@ -1,0 +1,9 @@
+.order-container{
+    height: auto;
+    box-shadow: 1px 5px 30px #a39999;
+    background-color: white;
+    border-radius: 12px;
+    padding: 5px;
+    display: flex;
+    justify-self: start;
+}
