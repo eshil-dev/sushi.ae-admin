@@ -1,5 +1,3 @@
-import '../../assets/css/MenuItem.css';
-
 const MenuItem = ({ orders }) => {
 
     let totalPrice = 0
@@ -7,26 +5,28 @@ const MenuItem = ({ orders }) => {
     const menuItem = orders.map(ordered => {
         totalPrice += ordered.menu.price
         return (
-            <div className='menu-item' key={ordered.menu._id}>
-                <div className='item'>
-                    <i className='bi bi-arrow-right-circle' /> &nbsp;
-                    <p style={{ fontWeight: '500', fontSize: '14px' }}>{ordered.qty} x {ordered.menu.name}</p>
-                </div>
-                <p style={{ fontWeight: '500', fontSize: '14px' }}>{ordered.menu.price} $</p>
+            <div className='d-flex justify-content-between'>
+                <p className='fs-5'>
+                    <span className='border border-sushi p-2 py-0 m-2'>{ordered.qty}</span>
+                    {ordered.menu.name}
+                </p>
+                <p className='fs-5'>{ordered.menu.price}</p>
             </div>
         )
     })
 
     return (
-        <div className='menu-card'>
-            {menuItem}
-            <hr style={{ marginTop: '0px' }} />
-            <div className='menu-total-price'>
-                <p style={{ fontWeight: '500' }}>Total bill</p>
-                <p style={{ fontWeight: '500' }}>{totalPrice} $</p>
+        <div className='col border-start-end-sm'>
+            <div className='p-2'>
+                {menuItem}
+                <hr className='mt-0 ' />
+                <div className='d-flex justify-content-between'>
+                    <p className='fs-4'>Total Bill</p>
+                    <p className='fs-4'>{totalPrice}</p>
+                </div>
             </div>
         </div>
-    );
+    )
 }
 
 export default MenuItem;

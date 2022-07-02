@@ -10,8 +10,6 @@ import Typography from '@mui/material/Typography';
 
 import { useUpdateOrderStatusMutation } from "../api/apiSlice";
 
-import '../../assets/css/OrderStatus.css';
-
 const ORDER_STATUS = [
     'Ordered',
     'Accepted',
@@ -49,54 +47,51 @@ const OrderStatus = ({ orderID, orderStatusIndex }) => {
     }
 
     return (
-        <div className='order-card'>
-            <div className='order-status'>
-                <p>ORDER STATUS</p>
+        <div className='col p-3 '>
+            <div className='bg-success bg-opacity-50 text-center '>
+                <p className='text-dark'>ORDER STATUS</p>
             </div>
-            <div className='order-stepper'>
+            <div className='mx-2'>
                 <Box>
                     <Stepper activeStep={orderStatusIndex} orientation="vertical">
-                        {ORDER_STATUS.map((status, index) => {
-                            return (
-                                <Step key={index}>
-                                    <StepLabel
-                                        optional={
-                                            index === 5 ? (
-                                                <Typography variant="caption">Done</Typography>
-                                            ) : null
+                        {ORDER_STATUS.map((status, index) =>
+                        (<Step key={index}>
+                            <StepLabel
+                                optional={
+                                    index === 5 ? (
+                                        <Typography variant="caption">Done</Typography>
+                                    ) : null
+                                }
+                            >
+                                {status}
+                            </StepLabel>
+                            <StepContent>
+                                <Box>
+                                    <div>
+                                        <Button
+                                            size='small'
+                                            variant="contained"
+                                            onClick={() => handleNext(index, orderID)}
+                                            sx={{ mt: 1, mr: 1 }}
+                                        >
+                                            {index === ORDER_STATUS.length - 1 ? 'Finish' : 'Continue'}
+                                        </Button>
+                                        {index === 1 ?
+                                            <Button
+                                                size='small'
+                                                color='warning'
+                                                variant="contained"
+                                                sx={{ mt: 1, mr: 1 }}
+                                                onClick={() => handleReject(orderID)}
+                                            >
+                                                Reject
+                                            </Button>
+                                            : ''
                                         }
-                                    >
-                                        {status}
-                                    </StepLabel>
-                                    <StepContent>
-                                        <Box>
-                                            <div>
-                                                <Button
-                                                    size='small'
-                                                    variant="contained"
-                                                    onClick={() => handleNext(index, orderID)}
-                                                    sx={{ mt: 1, mr: 1 }}
-                                                >
-                                                    {index === ORDER_STATUS.length - 1 ? 'Finish' : 'Continue'}
-                                                </Button>
-                                                {index === 1 ?
-                                                    <Button
-                                                        size='small'
-                                                        color='warning'
-                                                        variant="contained"
-                                                        sx={{ mt: 1, mr: 1 }}
-                                                        onClick={() => handleReject(orderID)}
-                                                    >
-                                                        Reject
-                                                    </Button>
-                                                    : ''
-                                                }
-                                            </div>
-                                        </Box>
-                                    </StepContent>
-                                </Step>
-                            )
-                        })}
+                                    </div>
+                                </Box>
+                            </StepContent>
+                        </Step>))}
                     </Stepper>
                 </Box>
             </div>
