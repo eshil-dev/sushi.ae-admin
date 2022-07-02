@@ -10,7 +10,8 @@ import {
     Label,
     Input
 } from "reactstrap";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import toast, { Toaster } from "react-hot-toast";
 
 import { useAddNewCategoryMutation } from "../api/apiSlice";
 import { convertToBase64 } from "../../utils/ImageToBase64";
@@ -25,7 +26,7 @@ const AddCategoryForm = () => {
     const [imageBase64, setImageBase64] = useState(undefined);
     const [available, setAvailable] = useState(false);
 
-    const [addNewCategory, { isLoading }] = useAddNewCategoryMutation();
+    const [addNewCategory, { isLoading, isSuccess, isError }] = useAddNewCategoryMutation();
 
     const onNameChanged = e => setName(e.target.value);
     const onDescriptionChanged = e => setDescription(e.target.value);
@@ -39,6 +40,13 @@ const AddCategoryForm = () => {
 
     const onAvailableChanged = e => setAvailable(e.target.checked);
     const isValid = Boolean(name) && Boolean(description) && !isLoading;
+
+    useEffect(()=> {
+        if(isSuccess)
+            toast.success('Category added successfully')
+        if(isError)
+            toast.success('Oops, something went wrong. please try again')
+    }, [isLoading, isSuccess, isError])
 
     const onFormSubmitted = async (e) => {
         e.preventDefault();
@@ -60,6 +68,10 @@ const AddCategoryForm = () => {
 
     return (
         <Row>
+            <Toaster
+                position="top-center"
+                reverseOrder={false}
+            />
             <Col>
                 <Card>
                     <CardTitle tag="h6" className="border-bottom p-3 mb-0">
@@ -100,7 +112,7 @@ const AddCategoryForm = () => {
                                     onChange={onImageSelected}
                                 />
                             </FormGroup>
-                            <ImagePreview image={prevImage} txt={'Image for this category is not selected yet'}/>
+                            <ImagePreview image={prevImage} txt={'Image for this category is not selected yet'} />
                             <FormGroup>
                                 <Input
                                     type="checkbox"
