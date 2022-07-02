@@ -1,8 +1,7 @@
 import { Form, FormGroup, Label, Input, Button, Row } from "reactstrap"
 import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
-import { useEffect, useState } from "react"
-
+import { useEffect, useState } from "react";
 import { useLoginUserMutation } from "./authApi";
 import { errorToTxt } from "../../utils/errorTotxtHelper";
 import '../../assets/css/Login.css';

@@ -1,3 +1,5 @@
+import './OrderCard.css';
+
 const MenuItem = ({ orders }) => {
 
     let totalPrice = 0
@@ -16,7 +18,7 @@ const MenuItem = ({ orders }) => {
     })
 
     return (
-        <div className='col border-start-end-sm'>
+        <div className='col-sm-12 col-md-4 border-start-end-sm cards'>
             <div className='p-2'>
                 {menuItem}
                 <hr className='mt-0 ' />
