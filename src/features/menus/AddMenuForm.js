@@ -10,7 +10,8 @@ import {
     Label,
     Input,
 } from "reactstrap";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import toast, { Toaster } from "react-hot-toast";
 
 import {
     useGetCategoriesQuery,
@@ -33,7 +34,7 @@ const AddMenuForm = () => {
     const [available, setAvailable] = useState(false);
 
     const { data: categories, isSuccess } = useGetCategoriesQuery();
-    const [addNewMenu, { isLoading: isAddMenuLoading }] = useAddNewMenuMutation();
+    const [addNewMenu, { isLoading: isAddMenuLoading, isSuccess: isAddMenuSucces, isError: isAddMenuError }] = useAddNewMenuMutation();
 
     const onNameChanged = e => setName(e.target.value);
     const onDescriptionChanged = e => setDescription(e.target.value);
@@ -65,6 +66,13 @@ const AddMenuForm = () => {
         setCategoryId('');
         setAvailable(false);
     }
+
+    useEffect(()=> {
+        if(isAddMenuSucces)
+            toast.success('Menu added successfully')
+        if(isAddMenuError)
+            toast.success('Oops, something went wrong. please try again')
+    }, [isAddMenuLoading, isAddMenuSucces, isAddMenuError])
 
     const onFormSubmitted = async (e) => {
         e.preventDefault();
@@ -122,6 +130,10 @@ const AddMenuForm = () => {
 
     return (
         <Row>
+            <Toaster
+                position="top-center"
+                reverseOrder={false}
+            />
             <Col>
                 <Card>
                     <CardTitle tag="h6" className="border-bottom p-3 mb-0">
@@ -183,7 +195,7 @@ const AddMenuForm = () => {
                                     onChange={onImageSelected}
                                 />
                             </FormGroup>
-                            <ImagePreview image={prevImage} txt={'Image for this menu is not selected yet'}/>
+                            <ImagePreview image={prevImage} txt={'Image for this menu is not selected yet'} />
                             <FormGroup>
                                 <Label for="menuCurrency">Currency</Label>
                                 <Input
