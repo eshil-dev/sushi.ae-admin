@@ -3,7 +3,7 @@ const MenuItem = ({ orders }) => {
     let totalPrice = 0
 
     const menuItem = orders.map(ordered => {
-        totalPrice += ordered.menu.price
+        totalPrice += ordered.menu.price * ordered.qty
         return (
             <div className='d-flex justify-content-between'>
                 <p className='fs-5'>
