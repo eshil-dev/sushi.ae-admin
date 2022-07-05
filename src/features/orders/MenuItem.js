@@ -5,7 +5,7 @@ const MenuItem = ({ orders }) => {
     const menuItem = orders.map(ordered => {
         totalPrice += ordered.menu.price * ordered.qty
         return (
-            <div className='d-flex justify-content-between'>
+            <div className='d-flex justify-content-between' key={ordered._id}>
                 <p className='fs-5'>
                     <span className='border border-sushi p-2 py-0 m-2'>{ordered.qty}</span>
                     {ordered.menu.name}
