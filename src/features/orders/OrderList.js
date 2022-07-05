@@ -31,7 +31,6 @@ const OrderList = () => {
                     />
                 </div>
             </div>
-
         )
     })
     return order;
