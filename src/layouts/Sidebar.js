@@ -47,7 +47,7 @@ const navigation = [
 ];
 
 const Sidebar = () => {
-  const showMobilemenu = () => {
+  const showMobilemenu = (e) => {
     document.getElementById("sidebarArea").classList.toggle("showSidebar");
   };
   let location = useLocation();
@@ -68,6 +68,7 @@ const Sidebar = () => {
           {navigation.map((navi, index) => (
             <NavItem key={index} className="sidenav-bg">
               <Link
+                onClick={() => showMobilemenu()}
                 to={navi.href}
                 className={
                   location.pathname === navi.href
