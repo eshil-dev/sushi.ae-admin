@@ -18,6 +18,7 @@ const Categories = lazy(() => import("../features/categories/CategoriesList"));
 const AddCategoryForm = lazy(() => import("../features/categories/AddCategoryFrom"));
 const Menus = lazy(() => import("../features/menus/MenusList"));
 const AddMenuForm = lazy(() => import("../features/menus/AddMenuForm"));
+const CustomerList = lazy(() => import("../features/customers/CustomerList"));
 
 const App = () => {
   return (
@@ -30,7 +31,8 @@ const App = () => {
         <Route path="/add-menu" element={<ProtectedRoute><AddMenuForm /></ProtectedRoute>} />
         <Route path="/menus" element={<ProtectedRoute><Menus /></ProtectedRoute>} />
         <Route path="/add-user" element={<ProtectedRoute><Register /></ProtectedRoute>} />
-        <Route path="/all-user" element={<ProtectedRoute><Users /></ProtectedRoute>} />
+        <Route path="/manage-user" element={<ProtectedRoute><Users /></ProtectedRoute>} />
+        <Route path="/customers" element={<ProtectedRoute><CustomerList /></ProtectedRoute>} />
       </Route>
       <Route path="/*" element={<p>Page not found!</p>} />
       <Route path="/login" element={<Login />} />

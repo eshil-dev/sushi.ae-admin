@@ -41,7 +41,12 @@ const navigation = [
   },
   {
     title: "Manage users",
-    href: "/all-user",
+    href: "/manage-user",
+    icon: "bi bi-columns",
+  },
+  {
+    title: "Customers",
+    href: "/customers",
     icon: "bi bi-columns",
   },
 ];
