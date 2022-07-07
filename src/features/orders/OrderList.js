@@ -11,10 +11,18 @@ const OrderList = () => {
     if (isLoading && !isSuccess) {
         return <h2>Loading...</h2>
     } else if (isError) {
-        return <h2>Something went wrong</h2>
+        return (
+            <div className="container">
+                <div class="alert text-center alert-danger shadow" role="alert"> Something went wrong</div>
+            </div>
+        )
     }
     if (data.length === 0) {
-        return <h2>Order not found.</h2>
+        return (
+            <div className="container">
+                <div class="alert text-center alert-warning shadow" role="alert"> No now Order</div>
+            </div>
+        )
     }
     const order = data.map(order => {
         const statusIndex = orderStatusTextToIndex(order.status)
