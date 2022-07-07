@@ -24,10 +24,10 @@ const OrderList = () => {
                     <OrderStatus orderID={order._id} orderStatusIndex={statusIndex} />
                     <MenuItem orders={order.ordered_menu} />
                     <CustomerCard
-                        name={order.customerName}
-                        phone={order.phone}
-                        address={order.address}
-                        location={order.location}
+                        name={order.customer.name}
+                        phone={order.customer.phone}
+                        address={order.customer.address}
+                        location={order.location.location}
                     />
                 </div>
             </div>
