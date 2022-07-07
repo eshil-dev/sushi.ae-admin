@@ -4,7 +4,7 @@ export const apiSlice = createApi({
     reducerPath: 'api',
     tagTypes: ['Category', 'Menu', 'User', 'Order'],
     baseQuery: fetchBaseQuery({
-        baseUrl: 'https://sushidotae.herokuapp.com/api', prepareHeaders: (headers, { getState }) => {
+        baseUrl: 'http://localhost:8080/api', prepareHeaders: (headers, { getState }) => {
             const token = getState().user.token;
             if (token) {
                 headers.set('authorization', `Bearer ${token}`);
@@ -114,7 +114,10 @@ export const apiSlice = createApi({
                 body: newStatus
             }),
             invalidatesTags: ['Order']
-        })
+        }),
+        getCustomers: builder.query({
+            query: () => '/customer',
+        }),
     }),
 });
 
@@ -133,5 +136,6 @@ export const {
     useUpdateMenuMutation,
     useRemoveMenuMutation,
     useGetOrdersQuery,
-    useUpdateOrderStatusMutation
+    useUpdateOrderStatusMutation,
+    useGetCustomersQuery
 } = apiSlice;
