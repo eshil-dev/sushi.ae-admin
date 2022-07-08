@@ -386,13 +386,21 @@ const UsersList = () => {
     if (isError)
         return (
             <div className="container">
-                <div class="alert text-center alert-warning shadow" role="alert">Something went wrong please refresh the page.</div>
+                <div
+                    class="alert text-center alert-warning shadow"
+                    role="alert">
+                    Something went wrong please refresh the page.
+                </div>
             </div>
         )
     if (users.length === 0) {
         return (
             <div className="container">
-                <p class="alert text-center alert-info shadow" role="alert">No user found.</p>
+                <p
+                    class="alert text-center alert-info shadow"
+                    role="alert">
+                    No user found.
+                </p>
             </div>
         )
     }
