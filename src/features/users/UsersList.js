@@ -17,6 +17,7 @@ import {
 import { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 
+import Loader from '../../layouts/loader/Loader'
 import {
     useGetAllUsersQuery,
     useUpdateUserMutation,
@@ -380,14 +381,22 @@ const UsersList = () => {
         </Modal>
     );
 
-    if (isLoading && !isSuccess) {
-        return <h2>Loading...</h2>
-    } else if (isError) {
-        return <h2>Some error occured.</h2>
-    } else if (error) {
-        return <h2>{error.toString()}</h2>
+    if (isLoading)
+        return <Loader />
+    if (isError)
+        return (
+            <div className="container">
+                <div class="alert text-center alert-warning shadow" role="alert">Something went wrong please refresh the page.</div>
+            </div>
+        )
+    if (users.length === 0) {
+        return (
+            <div className="container">
+                <p class="alert text-center alert-info shadow" role="alert">No user found.</p>
+            </div>
+        )
     }
-    if (isSuccess)
+    if (isSuccess && users.length !== 0)
         return (
             <Card>
                 {deleteModal}

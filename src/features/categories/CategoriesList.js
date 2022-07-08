@@ -15,6 +15,7 @@ import {
 } from "reactstrap";
 import { useState } from "react";
 
+import Loader from '../../layouts/loader/Loader'
 import {
     useGetCategoriesQuery,
     useRemoveCategoryMutation,
@@ -164,7 +165,7 @@ const CategoriesList = () => {
                             onChange={onImageSelected}
                         />
                     </FormGroup>
-                    <ImagePreview image={prevImage} txt={'New category image is not selected yet'}/>
+                    <ImagePreview image={prevImage} txt={'New category image is not selected yet'} />
                     <FormGroup>
                         <Input
                             type="checkbox"
@@ -185,93 +186,102 @@ const CategoriesList = () => {
         </Modal>
     );
 
-    if (isLoading && !isSuccess) {
-        return <h2>Loading...</h2>
-    } else if (isError) {
-        return <h2>Some error occured.</h2>
-    } else if (error) {
-        return <h2>{error.toString()}</h2>
+    if (isLoading)
+        return <Loader />
+    if (isError)
+        return (
+            <div className="container">
+                <div class="alert text-center alert-warning shadow" role="alert">Something went wrong please refresh the page.</div>
+            </div>
+        )
+    if (categories.length === 0) {
+        return (
+            <div className="container">
+                <p class="alert text-center alert-info shadow" role="alert">No category found.</p>
+            </div>
+        )
     }
-    return (
-        <div>
-            {updateModal}
-            {deleteModal}
-            <Card>
-                <CardBody>
-                    <CardTitle tag="h5">Categories List</CardTitle>
-                    <Table className="no-wrap mt-3 align-middle" responsive borderless hover striped>
-                        <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Avatar</th>
-                                <th>Name & description</th>
-                                <th>Is available?</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {categories.map((catData, index) => (
-                                <tr key={index} className="border-top">
-                                    <td>{index}</td>
-                                    <td>
-                                        <div className="d-flex align-items-center p-2">
-                                            <img
-                                                src={catData.imageUrl}
-                                                className="rounded-circle"
-                                                alt="avatar"
-                                                width="45"
-                                                height="45"
-                                            />
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div className="ms-0">
-                                            <h6 className="mb-0">{catData.name}</h6>
-                                            <span className="text-muted">{catData.description}</span>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        {catData.available === true ? (
-                                            <span
-                                                className="p-2 bg-success rounded-circle  ms-3 bi bi-check-circle"
-                                                style={{ color: 'white' }}
-                                            />
-                                        ) : (
-                                            <span
-                                                className="p-2 bg-warning rounded-circle ms-3 bi bi-x-circle"
-                                                style={{ color: 'white' }}
-                                            />
-                                        )}
-                                    </td>
-                                    <td>
-                                        <Button
-                                            className="btn btn-sm"
-                                            outline
-                                            color="primary"
-                                            onClick={() => onUpdateButtonClicked(catData._id)}
-                                        >
-                                            Update
-                                        </Button>
-                                        &nbsp;
-                                        <Button
-                                            className="btn btn-sm"
-                                            outline
-                                            color="danger"
-                                            onClick={() => {
-                                                toggleDelete();
-                                                setCatId(catData._id);
-                                            }}>
-                                            Delete
-                                        </Button>
-                                    </td>
+    if (isSuccess && categories.length !== 0)
+        return (
+            <div>
+                {updateModal}
+                {deleteModal}
+                <Card>
+                    <CardBody>
+                        <CardTitle tag="h5">Categories List</CardTitle>
+                        <Table className="no-wrap mt-3 align-middle" responsive borderless hover striped>
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Avatar</th>
+                                    <th>Name & description</th>
+                                    <th>Is available?</th>
+                                    <th>Action</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </Table>
-                </CardBody>
-            </Card>
-        </div>
-    );
+                            </thead>
+                            <tbody>
+                                {categories.map((catData, index) => (
+                                    <tr key={index} className="border-top">
+                                        <td>{index}</td>
+                                        <td>
+                                            <div className="d-flex align-items-center p-2">
+                                                <img
+                                                    src={catData.imageUrl}
+                                                    className="rounded-circle"
+                                                    alt="avatar"
+                                                    width="45"
+                                                    height="45"
+                                                />
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div className="ms-0">
+                                                <h6 className="mb-0">{catData.name}</h6>
+                                                <span className="text-muted">{catData.description}</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            {catData.available === true ? (
+                                                <span
+                                                    className="p-2 bg-success rounded-circle  ms-3 bi bi-check-circle"
+                                                    style={{ color: 'white' }}
+                                                />
+                                            ) : (
+                                                <span
+                                                    className="p-2 bg-warning rounded-circle ms-3 bi bi-x-circle"
+                                                    style={{ color: 'white' }}
+                                                />
+                                            )}
+                                        </td>
+                                        <td>
+                                            <Button
+                                                className="btn btn-sm"
+                                                outline
+                                                color="primary"
+                                                onClick={() => onUpdateButtonClicked(catData._id)}
+                                            >
+                                                Update
+                                            </Button>
+                                            &nbsp;
+                                            <Button
+                                                className="btn btn-sm"
+                                                outline
+                                                color="danger"
+                                                onClick={() => {
+                                                    toggleDelete();
+                                                    setCatId(catData._id);
+                                                }}>
+                                                Delete
+                                            </Button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </Table>
+                    </CardBody>
+                </Card>
+            </div>
+        );
 };
 
 export default CategoriesList;

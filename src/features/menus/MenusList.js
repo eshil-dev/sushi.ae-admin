@@ -14,7 +14,7 @@ import {
     ModalFooter
 } from "reactstrap";
 import { useState } from "react";
-
+import Loader from '../../layouts/loader/Loader'
 import {
     useGetCategoriesQuery,
     useUpdateMenuMutation,
@@ -260,7 +260,7 @@ const MenusList = () => {
                             onChange={onImageSelected}
                         />
                     </FormGroup>
-                    <ImagePreview image={prevImage} txt={'New menu image is not selected yet'}/>
+                    <ImagePreview image={prevImage} txt={'New menu image is not selected yet'} />
                     <FormGroup>
                         <Label for="menuCurrency">Currency</Label>
                         <Input
@@ -300,13 +300,22 @@ const MenusList = () => {
         </Modal>
     );
 
-
-    if (menuIsLoading && !menuIsSuccess) {
-        return <h2>Loading...</h2>
-    } else if (menuIsError) {
-        return <h2>Something went wrong</h2>
+    if (menuIsLoading)
+        return <Loader />
+    if (menuIsError)
+        return (
+            <div className="container">
+                <div class="alert text-center alert-warning shadow" role="alert">Something went wrong please refresh the page.</div>
+            </div>
+        )
+    if (menus.length === 0) {
+        return (
+            <div className="container">
+                <p class="alert text-center alert-info shadow" role="alert">No menu found.</p>
+            </div>
+        )
     }
-    if (menuIsSuccess)
+    if (menuIsSuccess && menus.length !== 0)
         return (
             <div>
                 {deleteModal}
