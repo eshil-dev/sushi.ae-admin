@@ -20,7 +20,7 @@ const OrderList = () => {
     if (data.length === 0) {
         return (
             <div className="container">
-                <div class="alert text-center alert-warning shadow" role="alert"> No now Order</div>
+                <div class="alert text-center alert-warning shadow" role="alert"> No new order</div>
             </div>
         )
     }
