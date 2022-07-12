@@ -369,11 +369,11 @@ const MenusList = () => {
                                         <td>{menuData.category.name}</td>
                                         <td>
                                             {menuData.price}
-                                            {menuData.currency === 1 ?
-                                                <span style={{ fontWeight: "bolder", color: 'gray' }}>&nbsp;$</span> :
-                                                <span style={{ fontWeight: "bolder", color: 'gray' }}>&nbsp;&</span>}
+                                            {menuData.currency === 'Dollar' ?
+                                                <span style={{ fontWeight: "bolder", color: 'gray', fontSize: '16px' }}>&nbsp;$</span> :
+                                                <span style={{ fontWeight: "bolder", color: 'gray', fontSize: '16px' }}>&nbsp;AED</span>}
                                         </td>
-                                        <td>{menuData.discount}</td>
+                                        <td>{menuData.discount}<span style={{ fontWeight: "bolder", color: 'gray', fontSize: '16px' }}>&nbsp;%</span> </td>
                                         <td>
                                             {menuData.available === true ?
                                                 <span
