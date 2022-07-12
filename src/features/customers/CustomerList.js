@@ -19,7 +19,7 @@ const CustomerList = () => {
         return (
             <div className="container">
                 <div
-                    class="alert text-center alert-warning shadow"
+                    className="alert text-center alert-warning shadow"
                     role="alert">
                     Something went wrong please refresh the page.
                 </div>
@@ -29,7 +29,7 @@ const CustomerList = () => {
         return (
             <div className="container">
                 <p
-                    class="alert text-center alert-info shadow"
+                    className="alert text-center alert-info shadow"
                     role="alert">
                     No customer found.
                 </p>
