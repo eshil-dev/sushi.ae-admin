@@ -43,7 +43,7 @@ const OrderList = () => {
                         <CustomerCard
                             name={order.customer.name}
                             phone={order.customer.phone}
-                            address={order.customer.address}
+                            address={order.location.address}
                             location={order.location.location}
                         />
                     </div>
