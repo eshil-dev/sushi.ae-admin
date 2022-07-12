@@ -340,76 +340,79 @@ const MenusList = () => {
                                     <th>Category</th>
                                     <th>Price</th>
                                     <th>Discount</th>
+                                    <th>Price with discount</th>
                                     <th>Is available?</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {menus.map((menuData, index) => (
-                                    <tr key={index} className="border-top">
-                                        <td>{index}</td>
-                                        <td>
-                                            <div className="d-flex align-items-center p-2">
-                                                <img
-                                                    src={menuData.imageUrl}
-                                                    className="rounded-circle"
-                                                    alt="avatar"
-                                                    width="45"
-                                                    height="45"
-                                                />
-
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div className="ms-0">
-                                                <h6 className="mb-0">{menuData.name}</h6>
-                                                <span className="text-muted">{menuData.description}</span>
-                                            </div>
-                                        </td>
-                                        <td>{menuData.category.name}</td>
-                                        <td>
-                                            {menuData.price}
-                                            {menuData.currency === 'Dollar' ?
-                                                <span style={{ fontWeight: "bolder", color: 'gray', fontSize: '16px' }}>&nbsp;$</span> :
-                                                <span style={{ fontWeight: "bolder", color: 'gray', fontSize: '16px' }}>&nbsp;AED</span>}
-                                        </td>
-                                        <td>{menuData.discount}<span style={{ fontWeight: "bolder", color: 'gray', fontSize: '16px' }}>&nbsp;%</span> </td>
-                                        <td>
-                                            {menuData.available === true ?
-                                                <span
-                                                    className="p-2 bg-success rounded-circle  ms-3 bi bi-check-circle"
-                                                    style={{ color: 'white' }} />
-                                                :
-                                                <span
-                                                    className="p-2 bg-warning rounded-circle ms-3 bi bi-x-circle"
-                                                    style={{ color: 'white' }} />
-                                            }
-                                        </td>
-                                        <td>
-                                            <Button
-                                                className="btn btn-sm"
-                                                outline
-                                                color="primary"
-                                                onClick={() => {
-                                                    toggleUpdate();
-                                                    onUpdateClicked(menuData._id)
-                                                }}>
-                                                Update
-                                            </Button>
-                                            &nbsp;
-                                            <Button
-                                                className="btn btn-sm"
-                                                outline
-                                                color="danger"
-                                                onClick={() => {
-                                                    toggleDelete();
-                                                    setMenuId(menuData._id);
-                                                }}>
-                                                Delete
-                                            </Button>
-                                        </td>
-                                    </tr>
-                                ))}
+                                {menus.map((menuData, index) => {
+                                    const currencyComponent = menuData.currency === 'Dollar' ?
+                                <span style={{ fontWeight: "bolder", color: 'gray', fontSize: '16px' }}>&nbsp;$</span> :
+                                <span style={{ fontWeight: "bolder", color: 'gray', fontSize: '16px' }}>&nbsp;AED</span>
+                                return (
+                                <tr key={index} className="border-top">
+                                    <td>{++index}</td>
+                                    <td>
+                                        <div className="d-flex align-items-center p-2">
+                                            <img
+                                                src={menuData.imageUrl}
+                                                className="rounded-circle"
+                                                alt="avatar"
+                                                width="45"
+                                                height="45"
+                                            />
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div className="ms-0">
+                                            <h6 className="mb-0">{menuData.name}</h6>
+                                            <span className="text-muted">{menuData.description}</span>
+                                        </div>
+                                    </td>
+                                    <td>{menuData.category.name}</td>
+                                    <td>
+                                        {menuData.price}
+                                        {currencyComponent}
+                                    </td>
+                                    <td>{menuData.discount}<span style={{ fontWeight: "bolder", color: 'gray', fontSize: '16px' }}>&nbsp;%</span> </td>
+                                    <td>{menuData.price - (menuData.price * (menuData.discount / 100))} {currencyComponent}</td>
+                                    <td>
+                                        {menuData.available === true ?
+                                            <span
+                                                className="p-2 bg-success rounded-circle  ms-3 bi bi-check-circle"
+                                                style={{ color: 'white' }} />
+                                            :
+                                            <span
+                                                className="p-2 bg-warning rounded-circle ms-3 bi bi-x-circle"
+                                                style={{ color: 'white' }} />
+                                        }
+                                    </td>
+                                    <td>
+                                        <Button
+                                            className="btn btn-sm"
+                                            outline
+                                            color="primary"
+                                            onClick={() => {
+                                                toggleUpdate();
+                                                onUpdateClicked(menuData._id)
+                                            }}>
+                                            Update
+                                        </Button>
+                                        &nbsp;
+                                        <Button
+                                            className="btn btn-sm"
+                                            outline
+                                            color="danger"
+                                            onClick={() => {
+                                                toggleDelete();
+                                                setMenuId(menuData._id);
+                                            }}>
+                                            Delete
+                                        </Button>
+                                    </td>
+                                </tr>)
+                                })}
                             </tbody>
                         </Table>
                     </CardBody>
