@@ -4,8 +4,6 @@ const MenuItem = ({ orders }) => {
 
     let totalPrice = 0
 
-    console.log(':::orders:::', orders)
-
     const menuItem = orders.map(ordered => {
         totalPrice += ordered.menu.price * ordered.qty
         return (
