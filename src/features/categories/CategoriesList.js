@@ -230,7 +230,7 @@ const CategoriesList = () => {
                             <tbody>
                                 {categories.map((catData, index) => (
                                     <tr key={index} className="border-top">
-                                        <td>{index}</td>
+                                        <td>{++index}</td>
                                         <td>
                                             <div className="d-flex align-items-center p-2">
                                                 <img
