@@ -60,17 +60,17 @@ const AddMenuForm = () => {
         setPrice('');
         setDiscount('');
         setImageName('')
-        setPrevImage(undefined)
-        setImageBase64(undefined)
+        setPrevImage('')
+        setImageBase64('')
         setCurrency('');
         setCategoryId('');
         setAvailable(false);
     }
 
-    useEffect(()=> {
-        if(isAddMenuSucces)
+    useEffect(() => {
+        if (isAddMenuSucces)
             toast.success('Menu added successfully')
-        if(isAddMenuError)
+        if (isAddMenuError)
             toast.success('Oops, something went wrong. please try again')
     }, [isAddMenuLoading, isAddMenuSucces, isAddMenuError])
 
@@ -128,6 +128,18 @@ const AddMenuForm = () => {
             </FormGroup>
     }
 
+    const currencyComponent =
+        currency === 'Dollar' ?
+            <span
+                style={{ fontWeight: "bolder", color: 'gray', fontSize: '16px' }}>
+                &nbsp;$&nbsp;
+            </span>
+            : currency === 'Derham' ?
+                <span
+                    style={{ fontWeight: "bolder", color: 'gray', fontSize: '16px' }}>
+                    &nbsp;AED&nbsp;
+                </span>
+                : ''
     return (
         <Row>
             <Toaster
@@ -176,27 +188,6 @@ const AddMenuForm = () => {
                                 />
                             </FormGroup>
                             <FormGroup>
-                                <Label for="menuDiscount">Discount</Label>
-                                <Input
-                                    id="menuDiscount"
-                                    name="discount"
-                                    placeholder="menu Discount"
-                                    type="number"
-                                    value={discount}
-                                    onChange={onDiscountChanged}
-                                />
-                            </FormGroup>
-                            <FormGroup>
-                                <Label for="imageFile">Image</Label>
-                                <Input
-                                    id="imageFile"
-                                    type="file"
-                                    accept="image/*"
-                                    onChange={onImageSelected}
-                                />
-                            </FormGroup>
-                            <ImagePreview image={prevImage} txt={'Image for this menu is not selected yet'} />
-                            <FormGroup>
                                 <Label for="menuCurrency">Currency</Label>
                                 <Input
                                     id="currency"
@@ -214,6 +205,36 @@ const AddMenuForm = () => {
                                     </option>
                                 </Input>
                             </FormGroup>
+                            <FormGroup>
+                                <Label for="menuDiscount">Discount (%)</Label>
+                                <Input
+                                    id="menuDiscount"
+                                    name="discount"
+                                    placeholder="menu Discount"
+                                    type="number"
+                                    value={discount}
+                                    onChange={onDiscountChanged}
+                                />
+                            </FormGroup>
+                            {
+                                currency && discount &&
+                                <p>
+                                    Price after discount: {price - (price * (discount / 100))} {currencyComponent}
+                                </p>
+                            }
+                            <FormGroup>
+                                <Label for="imageFile">Image</Label>
+                                <Input
+                                    id="imageFile"
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={onImageSelected}
+                                />
+                            </FormGroup>
+                            <ImagePreview
+                                image={prevImage}
+                                txt={'Image for this menu is not selected yet'}
+                            />
                             {categoryComponent}
                             <FormGroup>
                                 <Input
