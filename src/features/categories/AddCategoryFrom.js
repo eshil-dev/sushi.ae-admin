@@ -41,12 +41,21 @@ const AddCategoryForm = () => {
     const onAvailableChanged = e => setAvailable(e.target.checked);
     const isValid = Boolean(name) && Boolean(description) && !isLoading;
 
-    useEffect(()=> {
-        if(isSuccess)
+    useEffect(() => {
+        if (isSuccess)
             toast.success('Category added successfully')
-        if(isError)
+        if (isError)
             toast.success('Oops, something went wrong. please try again')
     }, [isLoading, isSuccess, isError])
+
+    const clearState = () => {
+        setName('');
+        setDescription('');
+        setImageName('');
+        setPrevImage('');
+        setImageBase64('');
+        setAvailable('');
+    }
 
     const onFormSubmitted = async (e) => {
         e.preventDefault();
@@ -54,14 +63,9 @@ const AddCategoryForm = () => {
             try {
                 const category = { name, description, imageName, imageBase64, available }
                 await addNewCategory(category).unwrap();
-                setName('');
-                setDescription('');
-                setImageName('');
-                setPrevImage(undefined);
-                setImageBase64(undefined);
-                setAvailable('');
+                clearState()
             } catch (err) {
-                console.log('::ERROR during adding category::')
+                toast.success('Oops, something went wrong. please try again')
             }
         }
     }
@@ -112,7 +116,10 @@ const AddCategoryForm = () => {
                                     onChange={onImageSelected}
                                 />
                             </FormGroup>
-                            <ImagePreview image={prevImage} txt={'Image for this category is not selected yet'} />
+                            <ImagePreview
+                                image={prevImage}
+                                txt={'Image for this category is not selected yet'}
+                            />
                             <FormGroup>
                                 <Input
                                     type="checkbox"
